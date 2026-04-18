@@ -7,210 +7,197 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #f4f3f0;
-  --surface: #ffffff;
-  --surface2: #f9f8f6;
-  --border: rgba(0,0,0,0.08);
-  --border2: rgba(0,0,0,0.14);
-  --text: #1a1a18;
-  --text2: #6b6b67;
-  --text3: #a8a8a4;
-  --blue: #2355f5;
-  --blue-bg: #eef1fe;
-  --blue-text: #1a3db8;
-  --green: #1a9e6e;
-  --green-bg: #e4f5ef;
-  --green-text: #0f6847;
-  --amber: #d97706;
-  --amber-bg: #fef3e2;
-  --amber-text: #92520a;
-  --red: #dc2626;
-  --red-bg: #fef2f2;
-  --red-text: #991b1b;
-  --purple-bg: #f0effe;
-  --purple-text: #4338ca;
-  --radius: 10px;
-  --radius-lg: 14px;
-  --font: 'Golos Text', sans-serif;
-  --mono: 'JetBrains Mono', monospace;
-  --sidebar-w: 210px;
-  --topbar-h: 52px;
+:root{
+  --bg:#f4f3f0;--surface:#fff;--surface2:#f9f8f6;--border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.14);
+  --text:#1a1a18;--text2:#6b6b67;--text3:#a8a8a4;
+  --blue:#2355f5;--blue-bg:#eef1fe;--blue-text:#1a3db8;
+  --green:#1a9e6e;--green-bg:#e4f5ef;--green-text:#0f6847;
+  --amber:#d97706;--amber-bg:#fef3e2;--amber-text:#92520a;
+  --red:#dc2626;--red-bg:#fef2f2;--red-text:#991b1b;
+  --purple-bg:#f0effe;--purple-text:#4338ca;
+  --r:10px;--rl:14px;--font:'Golos Text',sans-serif;--mono:'JetBrains Mono',monospace;
+  --sw:210px;--th:52px;
 }
-[data-theme="dark"] {
-  --bg: #111110;
-  --surface: #1c1c1a;
-  --surface2: #242422;
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.12);
-  --text: #f0efe9;
-  --text2: #8f8f8a;
-  --text3: #5a5a56;
-  --blue: #4f78ff;
-  --blue-bg: #1a2040;
-  --blue-text: #93aaff;
-  --green-bg: #0f2a1f;
-  --green-text: #4fd4a0;
-  --amber-bg: #2a1f0a;
-  --amber-text: #fbbf65;
-  --red-bg: #2a1010;
-  --red-text: #f87171;
-  --purple-bg: #1e1a40;
-  --purple-text: #a5b4fc;
+[data-theme=dark]{
+  --bg:#111110;--surface:#1c1c1a;--surface2:#242422;--border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.12);
+  --text:#f0efe9;--text2:#8f8f8a;--text3:#5a5a56;
+  --blue:#4f78ff;--blue-bg:#1a2040;--blue-text:#93aaff;
+  --green-bg:#0f2a1f;--green-text:#4fd4a0;
+  --amber-bg:#2a1f0a;--amber-text:#fbbf65;
+  --red-bg:#2a1010;--red-text:#f87171;
+  --purple-bg:#1e1a40;--purple-text:#a5b4fc;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
 .app{display:flex;height:100vh;overflow:hidden}
-
+/* LOGIN */
+.login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999}
+.login-box{background:var(--surface);border:1px solid var(--border2);border-radius:var(--rl);padding:32px 28px;width:340px}
+.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:24px}
+.lmark{width:34px;height:34px;background:var(--blue);border-radius:10px;display:flex;align-items:center;justify-content:center}
+.lmark svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2}
+.ltext{font-size:18px;font-weight:600;letter-spacing:-.02em}.ltext span{color:var(--blue)}
+.login-err{font-size:12px;color:var(--red-text);background:var(--red-bg);border-radius:7px;padding:8px 11px;margin-bottom:12px;display:none}
+.lfg{margin-bottom:14px}.lfg label{font-size:11px;color:var(--text2);font-weight:500;display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em}
+.lfg input{width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-size:13px;font-family:var(--font);outline:none;transition:border-color .15s}
+.lfg input:focus{border-color:var(--blue)}
+.login-btn{width:100%;padding:10px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;font-family:var(--font);cursor:pointer}
+.login-btn:hover{background:#1a44dd}
 /* SIDEBAR */
-.sidebar{width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden}
-.logo{padding:18px 16px 14px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--border)}
-.logo-mark{width:28px;height:28px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.logo-mark svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2}
-.logo-text{font-size:15px;font-weight:600;letter-spacing:-.02em}
-.logo-text span{color:var(--blue)}
-.nav{padding:10px 8px;flex:1;overflow-y:auto}
-.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:13px;color:var(--text2);transition:all .12s;margin-bottom:2px;border:1px solid transparent}
-.nav-item:hover{background:var(--surface2);color:var(--text)}
-.nav-item.active{background:var(--blue-bg);color:var(--blue-text);border-color:rgba(35,85,245,.12)}
-.nav-item svg{width:15px;height:15px;flex-shrink:0;opacity:.8}
-.nav-badge{margin-left:auto;background:var(--red);color:#fff;border-radius:20px;padding:1px 7px;font-size:10px;font-weight:600;font-family:var(--mono)}
-.nav-section{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;padding:12px 10px 4px}
-.sidebar-footer{padding:10px 8px;border-top:1px solid var(--border)}
-.user-row{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;transition:background .12s}
-.user-row:hover{background:var(--surface2)}
-.avatar{width:30px;height:30px;border-radius:50%;background:var(--blue-bg);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--blue-text);flex-shrink:0;font-family:var(--mono)}
-.user-name{font-size:12px;font-weight:500;flex:1}
-.theme-btn{width:26px;height:26px;border:1px solid var(--border2);border-radius:6px;background:var(--surface2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:14px;transition:all .12s}
-.theme-btn:hover{background:var(--border);color:var(--text)}
-
+.sidebar{width:var(--sw);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.slogo{padding:16px 14px 12px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--border)}
+.slogo .lm{width:28px;height:28px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.slogo .lm svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2}
+.slogo .lt{font-size:15px;font-weight:600;letter-spacing:-.02em}.slogo .lt span{color:var(--blue)}
+.snav{padding:10px 8px;flex:1;overflow-y:auto}
+.nsec{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;padding:10px 10px 4px}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:13px;color:var(--text2);transition:all .12s;margin-bottom:2px;border:1px solid transparent}
+.ni:hover{background:var(--surface2);color:var(--text)}
+.ni.active{background:var(--blue-bg);color:var(--blue-text);border-color:rgba(35,85,245,.12)}
+.ni svg{width:15px;height:15px;flex-shrink:0}
+.nbadge{margin-left:auto;background:var(--red);color:#fff;border-radius:20px;padding:1px 7px;font-size:10px;font-weight:600;font-family:var(--mono)}
+.sfooter{padding:10px 8px;border-top:1px solid var(--border)}
+.urow{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px}
+.av{border-radius:50%;background:var(--blue-bg);display:flex;align-items:center;justify-content:center;font-weight:600;color:var(--blue-text);flex-shrink:0;font-family:var(--mono)}
+.uinfo{flex:1;min-width:0}.uname{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.urole{font-size:10px;color:var(--text3)}
+.ibtn{width:26px;height:26px;border:1px solid var(--border2);border-radius:6px;background:var(--surface2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:13px;flex-shrink:0}
+.ibtn:hover{background:var(--border);color:var(--text)}
 /* MAIN */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
-.topbar{height:var(--topbar-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;gap:10px;flex-shrink:0}
-.search-wrap{flex:1;max-width:360px;position:relative}
-.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:var(--text3);fill:none;stroke-width:1.8;pointer-events:none}
-.search-wrap input{width:100%;padding:7px 10px 7px 32px;border:1px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-size:13px;font-family:var(--font);outline:none;transition:border-color .15s}
-.search-wrap input:focus{border-color:var(--blue)}
-.search-wrap input::placeholder{color:var(--text3)}
-.topbar-actions{display:flex;gap:8px;margin-left:auto}
+.topbar{height:var(--th);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;gap:10px;flex-shrink:0}
+.sw{flex:1;max-width:360px;position:relative}
+.sw svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:var(--text3);fill:none;stroke-width:1.8;pointer-events:none}
+.sw input{width:100%;padding:7px 10px 7px 32px;border:1px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-size:13px;font-family:var(--font);outline:none}
+.sw input:focus{border-color:var(--blue)}
+.sw input::placeholder{color:var(--text3)}
+.tra{display:flex;gap:8px;margin-left:auto;align-items:center}
 .btn{padding:7px 15px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--text);cursor:pointer;font-size:13px;font-family:var(--font);font-weight:500;transition:all .12s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
-.btn:hover{background:var(--surface2);border-color:var(--border2)}
-.btn:active{transform:scale(.98)}
-.btn-primary{background:var(--blue);color:#fff;border-color:var(--blue)}
-.btn-primary:hover{background:#1a44dd;border-color:#1a44dd}
-.btn-sm{padding:5px 11px;font-size:12px;border-radius:7px}
+.btn:hover{background:var(--surface2)}.btn:active{transform:scale(.98)}
+.btn-p{background:var(--blue);color:#fff;border-color:var(--blue)}.btn-p:hover{background:#1a44dd;border-color:#1a44dd}
+.btn-s{padding:5px 11px;font-size:12px;border-radius:7px}
+.btn-d{color:var(--red-text);border-color:var(--red-text)}.btn-d:hover{background:var(--red-bg)}
 .content{flex:1;overflow-y:auto;padding:20px}
-
-/* DASHBOARD */
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px}
-.stat-label{font-size:11px;color:var(--text3);font-weight:500;letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px}
-.stat-value{font-size:24px;font-weight:600;letter-spacing:-.03em;font-family:var(--mono)}
-.stat-delta{font-size:11px;margin-top:5px;display:flex;align-items:center;gap:4px}
-.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.dash-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px}
-.dash-card-title{font-size:13px;font-weight:600;margin-bottom:12px;letter-spacing:-.01em}
-.dash-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
-.dash-row:last-child{border-bottom:none}
-
+/* STATS */
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.sc{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px}
+.sl{font-size:11px;color:var(--text3);font-weight:500;letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px}
+.sv{font-size:22px;font-weight:600;letter-spacing:-.03em;font-family:var(--mono)}
 /* KANBAN */
-.kanban-wrap{display:flex;gap:12px;overflow-x:auto;padding-bottom:12px;align-items:flex-start;min-height:400px}
-.kol{width:220px;min-width:220px;flex-shrink:0;display:flex;flex-direction:column}
-.kol-head{padding:9px 12px;border-radius:var(--radius) var(--radius) 0 0;font-size:12px;font-weight:600;display:flex;justify-content:space-between;align-items:center;letter-spacing:.01em}
-.kol-body{background:var(--surface2);border-radius:0 0 var(--radius) var(--radius);padding:8px;min-height:100px;border:1px solid var(--border);border-top:none;transition:background .15s,outline .15s}
-.kol-body.drag-over{background:var(--blue-bg);outline:2px dashed var(--blue);outline-offset:-3px}
-.deal-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:11px;margin-bottom:8px;cursor:grab;transition:border-color .15s,opacity .15s;user-select:none}
-.deal-card:hover{border-color:var(--border2)}
-.deal-card.dragging{opacity:.3;cursor:grabbing}
-.deal-name{font-size:13px;font-weight:600;margin-bottom:3px;letter-spacing:-.01em}
-.deal-contact{font-size:11px;color:var(--text2)}
-.deal-amount{font-size:13px;color:var(--blue);font-weight:600;margin-top:6px;font-family:var(--mono)}
-.deal-footer{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.kw{display:flex;gap:12px;overflow-x:auto;padding-bottom:12px;align-items:flex-start;min-height:400px}
+.kol{width:224px;min-width:224px;flex-shrink:0;display:flex;flex-direction:column}
+.kh{padding:9px 12px;border-radius:var(--r) var(--r) 0 0;font-size:12px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.kb{background:var(--surface2);border-radius:0 0 var(--r) var(--r);padding:8px;min-height:80px;border:1px solid var(--border);border-top:none;transition:background .15s}
+.kb.dov{background:var(--blue-bg);outline:2px dashed var(--blue);outline-offset:-3px}
+.dc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:11px;margin-bottom:8px;cursor:grab;user-select:none;transition:border-color .15s,opacity .15s;position:relative}
+.dc:hover{border-color:var(--border2)}.dc.dragging{opacity:.3;cursor:grabbing}
+.dco{cursor:pointer;display:flex;align-items:center;gap:4px;font-size:11px;color:var(--blue-text);margin-top:7px;padding-top:7px;border-top:1px solid var(--border)}
+.dco:hover{opacity:.7}
+.dn{font-size:13px;font-weight:600;letter-spacing:-.01em;margin-bottom:2px}
+.dct{font-size:11px;color:var(--text2)}
+.dam{font-size:13px;color:var(--blue);font-weight:600;margin-top:5px;font-family:var(--mono)}
+.df{display:flex;align-items:center;justify-content:space-between;margin-top:5px}
 .tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:.02em}
-.tag-avito{background:var(--blue-bg);color:var(--blue-text)}
-.tag-phone{background:var(--amber-bg);color:var(--amber-text)}
-.tag-msg{background:var(--green-bg);color:var(--green-text)}
-.deal-date{font-size:10px;color:var(--text3);font-family:var(--mono)}
-.kol-add{text-align:center;padding:8px;cursor:pointer;font-size:12px;color:var(--text3);border-radius:7px;transition:all .12s;margin-top:2px;border:1px dashed transparent}
-.kol-add:hover{border-color:var(--border2);color:var(--text2);background:var(--surface)}
-.drop-line{height:2px;background:var(--blue);border-radius:2px;margin-bottom:6px;display:none}
-
-/* CHATS */
-.chat-layout{display:flex;height:calc(100vh - var(--topbar-h) - 40px);min-height:400px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
-.chat-list{width:270px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto}
-.chat-list-header{padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;font-weight:600}
-.chat-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .12s}
-.chat-item:hover{background:var(--surface2)}
-.chat-item.active{background:var(--blue-bg)}
-.ch-row{display:flex;gap:10px;align-items:flex-start}
-.ch-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
-.ch-meta{flex:1;min-width:0}
-.ch-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ch-preview{font-size:11px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
-.ch-ad{font-size:10px;color:var(--text3);margin-top:2px}
-.ch-time{font-size:10px;color:var(--text3);font-family:var(--mono)}
-.unread-dot{width:8px;height:8px;background:var(--blue);border-radius:50%;margin-top:5px;flex-shrink:0}
-.chat-window{flex:1;display:flex;flex-direction:column;min-width:0}
-.chat-whead{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--surface)}
-.chat-whead-info{flex:1;min-width:0}
-.chat-whead-name{font-size:14px;font-weight:600}
-.chat-whead-sub{font-size:11px;color:var(--text2)}
-.messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:8px;background:var(--bg)}
-.msg{max-width:74%;padding:9px 13px;font-size:13px;line-height:1.55;word-break:break-word}
-.msg-in{background:var(--surface);border:1px solid var(--border);border-radius:4px 14px 14px 14px;align-self:flex-start}
-.msg-out{background:var(--blue);color:#fff;border-radius:14px 4px 14px 14px;align-self:flex-end}
-.msg-time{font-size:10px;opacity:.5;margin-top:4px;text-align:right;font-family:var(--mono)}
-.msg-input-row{padding:12px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:flex-end;background:var(--surface)}
-.msg-input-row textarea{flex:1;resize:none;border:1px solid var(--border2);border-radius:8px;padding:8px 12px;font-size:13px;background:var(--surface2);color:var(--text);outline:none;min-height:40px;max-height:120px;font-family:var(--font);line-height:1.5;transition:border-color .15s}
-.msg-input-row textarea:focus{border-color:var(--blue)}
-.avito-banner{background:var(--blue-bg);border:1px solid rgba(35,85,245,.15);border-radius:var(--radius);padding:12px 14px;margin-bottom:14px}
-
+.ta{background:var(--blue-bg);color:var(--blue-text)}.tp{background:var(--amber-bg);color:var(--amber-text)}
+.dd{font-size:10px;color:var(--text3);font-family:var(--mono)}
+.dl{height:2px;background:var(--blue);border-radius:2px;margin-bottom:6px;display:none}
+.kadd{text-align:center;padding:8px;cursor:pointer;font-size:12px;color:var(--text3);border-radius:7px;transition:all .12s;border:1px dashed transparent}
+.kadd:hover{border-color:var(--border2);color:var(--text2);background:var(--surface)}
+.rbadge{position:absolute;top:8px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--amber)}
+.rbadge.ov{background:var(--red)}
+/* PANEL */
+.pov{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:500;display:none}
+.pov.open{display:block}
+.dpanel{position:fixed;top:0;right:0;width:720px;max-width:100vw;height:100vh;background:var(--surface);border-left:1px solid var(--border2);z-index:501;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .22s cubic-bezier(.4,0,.2,1)}
+.dpanel.open{transform:translateX(0)}
+.dph{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0}
+.dptitle{font-size:16px;font-weight:600;flex:1;letter-spacing:-.02em;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dpb{flex:1;display:flex;overflow:hidden}
+.dpi{width:240px;flex-shrink:0;border-right:1px solid var(--border);padding:14px 12px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+.dst{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.dfield{font-size:13px;color:var(--text2);line-height:2}.dfield b{color:var(--text);font-weight:500}
+.dpss{width:100%;padding:7px 10px;border:1px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-size:13px;font-family:var(--font);outline:none}
+.nota{width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-size:12px;font-family:var(--font);resize:none;outline:none;line-height:1.6;min-height:80px}
+.nota:focus{border-color:var(--blue)}
+.rb{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px}
+.rl{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.ri{display:flex;align-items:center;gap:8px;font-size:12px;padding:6px 8px;background:var(--surface);border:1px solid var(--border);border-radius:7px}
+.ri.ov{border-color:var(--red-text);background:var(--red-bg)}
+.ri.done{opacity:.4;text-decoration:line-through}
+.rit{flex:1;min-width:0}.ritm{font-size:10px;color:var(--text3);font-family:var(--mono);white-space:nowrap}
+.ri.ov .ritm{color:var(--red-text)}
+.ridel{width:18px;height:18px;border:none;background:none;cursor:pointer;color:var(--text3);font-size:13px;display:flex;align-items:center;justify-content:center;border-radius:4px}
+.ridel:hover{background:var(--red-bg);color:var(--red-text)}
+/* CHAT PANE */
+.dpc{flex:1;display:flex;flex-direction:column;min-width:0}
+.dpch{padding:11px 14px;border-bottom:1px solid var(--border);font-size:12px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:6px}
+.msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;background:var(--bg)}
+.msg{max-width:76%;padding:9px 13px;font-size:13px;line-height:1.55;word-break:break-word}
+.mi{background:var(--surface);border:1px solid var(--border);border-radius:4px 14px 14px 14px;align-self:flex-start}
+.mo{background:var(--blue);color:#fff;border-radius:14px 4px 14px 14px;align-self:flex-end}
+.mt{font-size:10px;opacity:.5;margin-top:4px;text-align:right;font-family:var(--mono)}
+.mau{font-size:10px;color:var(--text3);margin-bottom:3px}
+.inr{padding:12px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:flex-end;background:var(--surface);flex-shrink:0}
+.inr textarea{flex:1;resize:none;border:1px solid var(--border2);border-radius:8px;padding:8px 12px;font-size:13px;background:var(--surface2);color:var(--text);outline:none;min-height:40px;max-height:120px;font-family:var(--font);line-height:1.5}
+.inr textarea:focus{border-color:var(--blue)}
+/* CHATS PAGE */
+.chl{display:flex;height:calc(100vh - var(--th) - 40px);min-height:400px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
+.chlist{width:270px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto}
+.cllh{padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;font-weight:600}
+.chi{padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .12s}
+.chi:hover{background:var(--surface2)}.chi.active{background:var(--blue-bg)}
+.chrow{display:flex;gap:10px;align-items:flex-start}
+.chav{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0}
+.chm{flex:1;min-width:0}
+.chn{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chp{font-size:11px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.cha{font-size:10px;color:var(--text3);margin-top:2px}.cht{font-size:10px;color:var(--text3);font-family:var(--mono)}
+.ud{width:8px;height:8px;background:var(--blue);border-radius:50%;margin-top:5px;flex-shrink:0}
+.chwin{flex:1;display:flex;flex-direction:column;min-width:0}
+.chwh{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--surface)}
+.abb{background:var(--blue-bg);border:1px solid rgba(35,85,245,.15);border-radius:var(--r);padding:12px 14px;margin-bottom:14px}
 /* CONTACTS */
-.contacts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.contact-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;transition:border-color .12s}
-.contact-card:hover{border-color:var(--border2)}
-.contact-card.add-card{display:flex;align-items:center;justify-content:center;cursor:pointer;min-height:150px;border-style:dashed}
-.contact-card.add-card:hover{border-color:var(--blue);background:var(--blue-bg)}
-.cc-header{display:flex;align-items:center;gap:11px;margin-bottom:12px}
-.cc-info{font-size:12px;color:var(--text2);line-height:2}
-.cc-actions{display:flex;gap:6px;margin-top:12px}
-
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.cc{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px;transition:border-color .12s}
+.cc:hover{border-color:var(--border2)}
+.cc.ac{display:flex;align-items:center;justify-content:center;cursor:pointer;min-height:150px;border-style:dashed}
+.cc.ac:hover{border-color:var(--blue);background:var(--blue-bg)}
+.cch{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+.cci{font-size:12px;color:var(--text2);line-height:2}
 /* SETTINGS */
-.settings-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;margin-bottom:14px}
-.settings-title{font-size:14px;font-weight:600;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);letter-spacing:-.01em}
-.int-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)}
-.int-row:last-child{border-bottom:none}
-.int-icon{width:38px;height:38px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.int-info{flex:1}
-.int-name{font-size:13px;font-weight:600}
-.int-desc{font-size:11px;color:var(--text2);margin-top:2px}
-.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.code-block{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-family:var(--mono);font-size:12px;color:var(--text2);margin-top:8px;line-height:1.8;overflow-x:auto}
-
+.ss{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px;margin-bottom:14px}
+.st{font-size:14px;font-weight:600;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);letter-spacing:-.01em}
+.ir{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)}
+.ir:last-child{border-bottom:none}
+.ii{width:38px;height:38px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.iin{flex:1}.iit{font-size:13px;font-weight:600}.iid{font-size:11px;color:var(--text2);margin-top:2px}
+.sdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.mt2{width:100%;border-collapse:collapse;font-size:13px}
+.mt2 th{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.04em}
+.mt2 td{padding:9px 10px;border-bottom:1px solid var(--border)}
+.mt2 tr:last-child td{border-bottom:none}
+.rbg{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600}
+.ra{background:var(--purple-bg);color:var(--purple-text)}.rm{background:var(--green-bg);color:var(--green-text)}
 /* MODAL */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1000;align-items:center;justify-content:center}
-.modal-overlay.open{display:flex}
-.modal{background:var(--surface);border-radius:var(--radius-lg);padding:22px;width:360px;border:1px solid var(--border2);max-height:90vh;overflow-y:auto}
-.modal-title{font-size:15px;font-weight:600;margin-bottom:16px;letter-spacing:-.02em}
-.form-group{margin-bottom:13px}
-.form-label{font-size:11px;color:var(--text2);font-weight:500;display:block;margin-bottom:5px;letter-spacing:.02em;text-transform:uppercase}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:8px 11px;border:1px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-size:13px;outline:none;font-family:var(--font);transition:border-color .15s}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--blue)}
-.modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
-
+.mo2{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:600;align-items:center;justify-content:center}
+.mo2.open{display:flex}
+.mbox{background:var(--surface);border-radius:var(--rl);padding:22px;width:360px;border:1px solid var(--border2);max-height:90vh;overflow-y:auto}
+.mt3{font-size:15px;font-weight:600;margin-bottom:16px;letter-spacing:-.02em}
+.fg{margin-bottom:13px}
+.fl{font-size:11px;color:var(--text2);font-weight:500;display:block;margin-bottom:5px;letter-spacing:.02em;text-transform:uppercase}
+.fg input,.fg select,.fg textarea{width:100%;padding:8px 11px;border:1px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-size:13px;outline:none;font-family:var(--font)}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--blue)}
+.mb{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
 /* TOAST */
-.toast-container{position:fixed;bottom:20px;right:20px;z-index:2000;display:flex;flex-direction:column;gap:8px}
-.toast{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:10px 16px;font-size:13px;font-weight:500;box-shadow:0 4px 24px rgba(0,0,0,.12);animation:toastIn .2s ease;display:flex;align-items:center;gap:8px}
-.toast.success{border-left:3px solid var(--green)}
-.toast.error{border-left:3px solid var(--red)}
-@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
-/* EMPTY STATE */
-.empty-state{text-align:center;padding:48px 20px;color:var(--text3)}
-.empty-state svg{width:40px;height:40px;margin:0 auto 12px;display:block;stroke:var(--text3);fill:none;stroke-width:1.2}
-.empty-state p{font-size:13px}
-
-/* SCROLLBAR */
+.tc{position:fixed;bottom:20px;right:20px;z-index:9998;display:flex;flex-direction:column;gap:8px}
+.to{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r);padding:10px 16px;font-size:13px;font-weight:500;animation:tin .2s ease;display:flex;align-items:center;gap:8px}
+.to.s{border-left:3px solid var(--green)}.to.e{border-left:3px solid var(--red)}.to.w{border-left:3px solid var(--amber)}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* DASH */
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px}
+.dcardt{font-size:13px;font-weight:600;margin-bottom:12px;letter-spacing:-.01em}
+.dr{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.dr:last-child{border-bottom:none}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
@@ -218,740 +205,598 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
 </head>
 <body>
 
-<div class="app">
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <div class="logo">
-      <div class="logo-mark">
-        <svg viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><path d="M9 12h6M12 9v6"/></svg>
-      </div>
-      <div class="logo-text">Мини<span>CRM</span></div>
+<div class="login-screen" id="ls">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="lmark"><svg viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><path d="M9 12h6M12 9v6"/></svg></div>
+      <div class="ltext">Мини<span>CRM</span></div>
     </div>
-    <nav class="nav">
-      <div class="nav-section">Основное</div>
-      <div class="nav-item active" data-page="dashboard">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
-        Дашборд
-      </div>
-      <div class="nav-item" data-page="deals">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="14" height="10" rx="1.5"/><path d="M5 3V2M11 3V2M1 7h14"/></svg>
-        Сделки
-      </div>
-      <div class="nav-item" data-page="chats">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2H3a1 1 0 00-1 1v7a1 1 0 001 1h2l3 3 3-3h2a1 1 0 001-1V3a1 1 0 00-1-1z"/></svg>
-        Чаты
-        <span class="nav-badge" id="chat-badge" style="display:none">0</span>
-      </div>
-      <div class="nav-item" data-page="contacts">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="5" r="3"/><path d="M2 14a6 6 0 0112 0"/></svg>
-        Контакты
-      </div>
-      <div class="nav-section">Система</div>
-      <div class="nav-item" data-page="settings">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/></svg>
-        Настройки
-      </div>
+    <div style="font-size:15px;font-weight:600;margin-bottom:4px">Добро пожаловать</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:20px">Войдите в свой аккаунт</div>
+    <div class="login-err" id="lerr">Неверный логин или пароль</div>
+    <div class="lfg"><label>Логин</label><input id="ll" placeholder="admin" autocomplete="username"></div>
+    <div class="lfg"><label>Пароль</label><input id="lp" type="password" placeholder="••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="login-btn" onclick="doLogin()">Войти</button>
+    <div style="font-size:11px;color:var(--text3);margin-top:14px;text-align:center">admin / admin123 &nbsp;·&nbsp; manager / manager123</div>
+  </div>
+</div>
+
+<div class="app" id="app" style="display:none">
+  <div class="sidebar">
+    <div class="slogo">
+      <div class="lm"><svg viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><path d="M9 12h6M12 9v6"/></svg></div>
+      <div class="lt">Мини<span>CRM</span></div>
+    </div>
+    <nav class="snav">
+      <div class="nsec">Основное</div>
+      <div class="ni active" data-page="dashboard"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>Дашборд</div>
+      <div class="ni" data-page="deals"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="14" height="10" rx="1.5"/><path d="M5 3V2M11 3V2M1 7h14"/></svg>Сделки</div>
+      <div class="ni" data-page="chats"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2H3a1 1 0 00-1 1v7a1 1 0 001 1h2l3 3 3-3h2a1 1 0 001-1V3a1 1 0 00-1-1z"/></svg>Чаты<span class="nbadge" id="cbadge" style="display:none">0</span></div>
+      <div class="ni" data-page="contacts"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="5" r="3"/><path d="M2 14a6 6 0 0112 0"/></svg>Контакты</div>
+      <div class="nsec">Система</div>
+      <div class="ni" data-page="settings" id="nav-s"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/></svg>Настройки</div>
     </nav>
-    <div class="sidebar-footer">
-      <div class="user-row">
-        <div class="avatar" id="user-avatar">АИ</div>
-        <div class="user-name" id="user-name-display">Александр И.</div>
-        <button class="theme-btn" onclick="toggleTheme()" title="Сменить тему">◑</button>
+    <div class="sfooter">
+      <div class="urow">
+        <div class="av" id="sbav" style="width:30px;height:30px;font-size:11px">АИ</div>
+        <div class="uinfo"><div class="uname" id="sbname">Пользователь</div><div class="urole" id="sbrole">Менеджер</div></div>
+        <button class="ibtn" onclick="toggleTheme()" title="Тема">◑</button>
+        <button class="ibtn" onclick="doLogout()" title="Выйти">⏻</button>
       </div>
     </div>
   </div>
 
-  <!-- MAIN -->
   <div class="main">
     <div class="topbar">
-      <div class="search-wrap">
-        <svg viewBox="0 0 16 16"><circle cx="6.5" cy="6.5" r="4"/><path d="M11 11l3 3"/></svg>
-        <input id="search-input" placeholder="Поиск сделок, контактов..." oninput="handleSearch(this.value)">
-      </div>
-      <div class="topbar-actions">
-        <button class="btn btn-primary" onclick="openModal('new-deal')">
-          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 2v12M2 8h12"/></svg>
-          Сделка
-        </button>
-        <button class="btn" onclick="openModal('new-contact')">
-          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="5" r="3"/><path d="M2 14a6 6 0 0112 0"/></svg>
-          Контакт
-        </button>
+      <div class="sw"><svg viewBox="0 0 16 16"><circle cx="6.5" cy="6.5" r="4"/><path d="M11 11l3 3"/></svg><input id="sinput" placeholder="Поиск..." oninput="handleSearch(this.value)"></div>
+      <div class="tra">
+        <button class="btn btn-p" onclick="openModal('new-deal')"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 2v12M2 8h12"/></svg>Сделка</button>
+        <button class="btn" onclick="openModal('new-contact')"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="5" r="3"/><path d="M2 14a6 6 0 0112 0"/></svg>Контакт</button>
       </div>
     </div>
     <div class="content" id="content"></div>
   </div>
 </div>
 
-<!-- MODAL -->
-<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
-  <div class="modal" id="modal"></div>
+<!-- DEAL PANEL -->
+<div class="pov" id="pov" onclick="closePanel()"></div>
+<div class="dpanel" id="dpanel">
+  <div class="dph">
+    <div class="dptitle" id="dptit">Сделка</div>
+    <button class="btn btn-s" onclick="closePanel()">✕ Закрыть</button>
+  </div>
+  <div class="dpb">
+    <div class="dpi" id="dpinfo"></div>
+    <div class="dpc" id="dpchat"></div>
+  </div>
 </div>
 
+<!-- MODAL -->
+<div class="mo2" id="mo" onclick="if(event.target===this)closeModal()"><div class="mbox" id="mbox"></div></div>
+
 <!-- TOAST -->
-<div class="toast-container" id="toasts"></div>
+<div class="tc" id="tc"></div>
 
 <script>
-// ═══════════════════════════════════════════════
-// STORAGE
-// ═══════════════════════════════════════════════
-const STORE = {
-  get(key, def) {
-    try { const v = localStorage.getItem('crm_' + key); return v ? JSON.parse(v) : def; } catch { return def; }
-  },
-  set(key, val) {
-    try { localStorage.setItem('crm_' + key, JSON.stringify(val)); } catch {}
-  }
+const ST={get(k,d){try{const v=localStorage.getItem('crm_'+k);return v?JSON.parse(v):d}catch{return d}},set(k,v){try{localStorage.setItem('crm_'+k,JSON.stringify(v))}catch{}}};
+
+const DM=[
+  {id:1,login:'admin',password:'admin123',name:'Александр И.',role:'admin'},
+  {id:2,login:'manager',password:'manager123',name:'Мария С.',role:'manager'},
+  {id:3,login:'ivan',password:'ivan123',name:'Иван Петров',role:'manager'},
+];
+const DD=[
+  {id:1,name:'Кухня L-образная',contact:'Клиент Соколов',amount:285000,stage:'new',source:'avito',date:'14.04',note:'',reminders:[],messages:[]},
+  {id:2,name:'Шкаф-купе 3м',contact:'Дмитрий Попов',amount:95000,stage:'contact',source:'avito',date:'15.04',note:'Спрашивал про ДСП',reminders:[],messages:[{out:false,text:'Какой материал фасадов?',time:'13:04',author:'Дмитрий'},{out:false,text:'Есть ли доставка?',time:'13:05',author:'Дмитрий'}]},
+  {id:3,name:'Гардеробная',contact:'Ольга Кузнецова',amount:340000,stage:'measure',source:'phone',date:'13.04',note:'Замер в четверг 10:00',reminders:[{id:1,text:'Позвонить перед замером',datetime:'2026-04-20T09:00',done:false}],messages:[]},
+  {id:4,name:'Детская мебель',contact:'Иван Новиков',amount:120000,stage:'proposal',source:'avito',date:'16.04',note:'',reminders:[],messages:[{out:true,text:'Отправил КП на почту',time:'11:00',author:'Менеджер'}]},
+  {id:5,name:'Кухня прямая',contact:'Мария Соколова',amount:195000,stage:'won',source:'avito',date:'10.04',note:'',reminders:[],messages:[]},
+  {id:6,name:'Прихожая',contact:'Иван Новиков',amount:75000,stage:'won',source:'avito',date:'08.04',note:'',reminders:[],messages:[]},
+];
+const DC=[
+  {id:1,name:'Клиент Соколов',phone:'+7 916 234-56-78',source:'avito',note:''},
+  {id:2,name:'Дмитрий Попов',phone:'+7 903 876-54-32',source:'avito',note:''},
+  {id:3,name:'Ольга Кузнецова',phone:'+7 926 111-22-33',source:'phone',note:''},
+  {id:4,name:'Иван Новиков',phone:'+7 915 999-00-11',source:'avito',note:''},
+  {id:5,name:'Мария Соколова',phone:'+7 900 111-22-33',source:'avito',note:''},
+];
+const DCH=[
+  {id:0,name:'Дмитрий Попов',av:'ДП',avBg:'#dbeafe',avTc:'#1e40af',unread:2,time:'13:05',ad:'Шкаф-купе 3м',messages:[{out:false,text:'Какой материал фасадов?',time:'13:04'},{out:false,text:'Есть ли доставка?',time:'13:05'}]},
+  {id:1,name:'Иван Новиков',av:'ИН',avBg:'#fef3c7',avTc:'#92400e',unread:0,time:'11:42',ad:'Гардеробная',messages:[{out:true,text:'Готовы выехать на замер. Когда удобно?',time:'11:35'},{out:false,text:'В четверг?',time:'11:40'}]},
+];
+
+let S={
+  user:ST.get('user',null),
+  managers:ST.get('managers',DM),
+  deals:ST.get('deals',DD),
+  contacts:ST.get('contacts',DC),
+  chats:ST.get('chats',DCH),
+  ac:ST.get('ac',0),
+  page:ST.get('page','dashboard'),
+  theme:ST.get('theme','light'),
+  ndi:ST.get('ndi',10),
+  nci:ST.get('nci',10),
+  nmi:ST.get('nmi',10),
+  openDeal:null,
 };
+function save(){['user','managers','deals','contacts','chats','ac','page','theme','ndi','nci','nmi'].forEach(k=>ST.set(k,S[k]));}
 
-// ═══════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════
-const defaultDeals = [
-  {id:1, name:'Кухня L-образная',  contact:'Мария Соколова',  amount:285000, stage:'new',      source:'avito', date:'14.04'},
-  {id:2, name:'Шкаф-купе 3м',      contact:'Дмитрий Попов',   amount:95000,  stage:'contact',  source:'avito', date:'15.04'},
-  {id:3, name:'Гардеробная',        contact:'Ольга Кузнецова', amount:340000, stage:'measure',  source:'phone', date:'13.04'},
-  {id:4, name:'Детская мебель',     contact:'Иван Новиков',    amount:120000, stage:'proposal', source:'avito', date:'16.04'},
-  {id:5, name:'Кухня прямая',       contact:'Мария Соколова',  amount:195000, stage:'won',      source:'avito', date:'10.04'},
-  {id:6, name:'Прихожая',           contact:'Иван Новиков',    amount:75000,  stage:'won',      source:'avito', date:'08.04'},
-];
-const defaultContacts = [
-  {id:1, name:'Мария Соколова',  phone:'+7 916 234-56-78', source:'avito', note:'Интересуется кухнями'},
-  {id:2, name:'Дмитрий Попов',   phone:'+7 903 876-54-32', source:'avito', note:'Спрашивал про материалы'},
-  {id:3, name:'Ольга Кузнецова', phone:'+7 926 111-22-33', source:'phone', note:''},
-  {id:4, name:'Иван Новиков',    phone:'+7 915 999-00-11', source:'avito', note:'Хочет замер в четверг'},
-];
-const defaultChats = [
-  {id:0, name:'Мария Соколова',  av:'МС', avBg:'#dbeafe', avTc:'#1e40af', unread:1, time:'14:22', ad:'Кухня L-образная', messages:[
-    {out:false, text:'Здравствуйте, кухня ещё продаётся?',                                   time:'14:20'},
-    {out:true,  text:'Добрый день! Да, в наличии. L-образная 4×2м, от 285 000 ₽.',           time:'14:21'},
-    {out:false, text:'Можно узнать подробнее о материалах?',                                 time:'14:22'},
-  ]},
-  {id:1, name:'Дмитрий Попов',   av:'ДП', avBg:'#dcfce7', avTc:'#166534', unread:2, time:'13:05', ad:'Шкаф-купе 3м', messages:[
-    {out:false, text:'Какой материал фасадов?',   time:'13:04'},
-    {out:false, text:'И есть ли доставка по Москве?', time:'13:05'},
-  ]},
-  {id:2, name:'Иван Новиков',    av:'ИН', avBg:'#fef3c7', avTc:'#92400e', unread:0, time:'11:42', ad:'Гардеробная', messages:[
-    {out:true,  text:'Иван, добрый день! Готовы выехать на замер. Когда удобно?', time:'11:35'},
-    {out:false, text:'Можно замер в четверг?',                                    time:'11:40'},
-    {out:true,  text:'Четверг отлично! Запишем на 10:00 или 14:00 — как удобнее?', time:'11:42'},
-  ]},
-  {id:3, name:'Анна Белова',     av:'АБ', avBg:'#fce7f3', avTc:'#9d174d', unread:0, time:'вчера', ad:'Детская', messages:[
-    {out:false, text:'Добрый день, интересует детская',             time:'09:10'},
-    {out:true,  text:'Здравствуйте! Рады помочь. Скиньте размеры комнаты', time:'09:15'},
-    {out:false, text:'Спасибо, подумаю',                            time:'09:30'},
-  ]},
+const STAGES=[
+  {key:'new',label:'Новые',bg:'#dbeafe',tc:'#1e40af'},
+  {key:'contact',label:'Контакт',bg:'#fef3c7',tc:'#92400e'},
+  {key:'measure',label:'Замер',bg:'#ede9fe',tc:'#3730a3'},
+  {key:'proposal',label:'КП',bg:'#fce7f3',tc:'#9d174d'},
+  {key:'won',label:'Выиграно',bg:'#dcfce7',tc:'#166534'},
 ];
 
-let S = {
-  page: STORE.get('page', 'dashboard'),
-  deals: STORE.get('deals', defaultDeals),
-  contacts: STORE.get('contacts', defaultContacts),
-  chats: STORE.get('chats', defaultChats),
-  activeChat: STORE.get('activeChat', 0),
-  nextDealId: STORE.get('nextDealId', 10),
-  nextContactId: STORE.get('nextContactId', 10),
-  theme: STORE.get('theme', 'light'),
-  userName: STORE.get('userName', 'Александр И.'),
-};
-
-function save() {
-  STORE.set('page', S.page);
-  STORE.set('deals', S.deals);
-  STORE.set('contacts', S.contacts);
-  STORE.set('chats', S.chats);
-  STORE.set('activeChat', S.activeChat);
-  STORE.set('nextDealId', S.nextDealId);
-  STORE.set('nextContactId', S.nextContactId);
-  STORE.set('theme', S.theme);
-  STORE.set('userName', S.userName);
+// AUTH
+function doLogin(){
+  const l=document.getElementById('ll').value.trim(),p=document.getElementById('lp').value;
+  const m=S.managers.find(m=>m.login===l&&m.password===p);
+  if(!m){document.getElementById('lerr').style.display='block';return;}
+  document.getElementById('lerr').style.display='none';
+  S.user=m;save();showApp();
 }
+function doLogout(){S.user=null;save();document.getElementById('app').style.display='none';document.getElementById('ls').style.display='flex';}
+function showApp(){
+  document.getElementById('ls').style.display='none';
+  document.getElementById('app').style.display='flex';
+  applyTheme();updateSb();render();startChecker();
+}
+function updateSb(){
+  const u=S.user;if(!u)return;
+  document.getElementById('sbav').textContent=u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('sbname').textContent=u.name;
+  document.getElementById('sbrole').textContent=u.role==='admin'?'Администратор':'Менеджер';
+  document.getElementById('nav-s').style.display=u.role==='admin'?'':'none';
+}
+function isAdmin(){return S.user?.role==='admin';}
 
-// ═══════════════════════════════════════════════
 // THEME
-// ═══════════════════════════════════════════════
-function applyTheme() {
-  document.documentElement.setAttribute('data-theme', S.theme);
-}
-function toggleTheme() {
-  S.theme = S.theme === 'light' ? 'dark' : 'light';
-  applyTheme(); save();
-}
+function applyTheme(){document.body.setAttribute('data-theme',S.theme);}
+function toggleTheme(){S.theme=S.theme==='light'?'dark':'light';applyTheme();save();}
 
-// ═══════════════════════════════════════════════
-// STAGES
-// ═══════════════════════════════════════════════
-const STAGES = [
-  {key:'new',      label:'Новые',    bg:'#dbeafe', tc:'#1e40af'},
-  {key:'contact',  label:'Контакт',  bg:'#fef3c7', tc:'#92400e'},
-  {key:'measure',  label:'Замер',    bg:'#ede9fe', tc:'#3730a3'},
-  {key:'proposal', label:'КП',       bg:'#fce7f3', tc:'#9d174d'},
-  {key:'won',      label:'Выиграно', bg:'#dcfce7', tc:'#166534'},
-];
-
-// ═══════════════════════════════════════════════
 // NAV
-// ═══════════════════════════════════════════════
-function nav(page) {
-  S.page = page;
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  const el = document.querySelector(`.nav-item[data-page="${page}"]`);
-  if (el) el.classList.add('active');
-  render(); save();
+document.querySelectorAll('.ni').forEach(el=>el.addEventListener('click',()=>nav(el.dataset.page)));
+function nav(p){
+  if(p==='settings'&&!isAdmin()){toast('Нет доступа','e');return;}
+  S.page=p;document.querySelectorAll('.ni').forEach(e=>e.classList.remove('active'));
+  const el=document.querySelector(`.ni[data-page="${p}"]`);if(el)el.classList.add('active');
+  render();save();
 }
 
-document.querySelectorAll('.nav-item').forEach(el => {
-  el.addEventListener('click', () => nav(el.dataset.page));
-});
-
-// ═══════════════════════════════════════════════
 // HELPERS
-// ═══════════════════════════════════════════════
-function fmt(n) { return Number(n).toLocaleString('ru-RU') + ' ₽'; }
-function today() {
-  const d = new Date();
-  return String(d.getDate()).padStart(2,'0') + '.' + String(d.getMonth()+1).padStart(2,'0');
-}
-function nowTime() {
-  const d = new Date();
-  return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
-}
+function fmt(n){return Number(n).toLocaleString('ru-RU')+' ₽';}
+function today(){const d=new Date();return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0');}
+function nowt(){const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fdt(dt){if(!dt)return '';const d=new Date(dt);return d.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'})+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
+function isOv(dt){return dt&&new Date(dt)<new Date();}
+function toast(msg,t='s'){const el=document.createElement('div');el.className='to '+t;el.textContent=msg;document.getElementById('tc').appendChild(el);setTimeout(()=>el.remove(),3000);}
+function ubadge(){const u=S.chats.reduce((s,c)=>s+c.unread,0);const b=document.getElementById('cbadge');if(b){b.textContent=u;b.style.display=u?'':'none';}}
 
-function toast(msg, type='success') {
-  const t = document.createElement('div');
-  t.className = 'toast ' + type;
-  t.textContent = msg;
-  document.getElementById('toasts').appendChild(t);
-  setTimeout(() => t.remove(), 2800);
+// REMINDER CHECKER
+let _ci=null;
+function startChecker(){if(_ci)clearInterval(_ci);_ci=setInterval(checkR,30000);checkR();}
+function checkR(){
+  const now=new Date();
+  S.deals.forEach(d=>(d.reminders||[]).forEach(r=>{
+    if(r.done||r._n)return;
+    if(new Date(r.datetime)<=now){
+      r._n=true;
+      toast('⏰ '+d.name+': '+r.text,'w');
+      if(Notification.permission==='granted')new Notification('МиниCRM',{body:d.name+': '+r.text});
+      try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=880;g.gain.value=0.25;o.start();setTimeout(()=>{g.gain.linearRampToValueAtTime(0,ctx.currentTime+0.35);setTimeout(()=>ctx.close(),500);},80);}catch{}
+      save();
+    }
+  }));
 }
+function askNotif(){if('Notification'in window&&Notification.permission==='default')Notification.requestPermission();}
 
-function updateBadge() {
-  const u = S.chats.reduce((s,c)=>s+c.unread,0);
-  const b = document.getElementById('chat-badge');
-  if (b) { b.textContent = u; b.style.display = u ? '' : 'none'; }
-}
-
-// ═══════════════════════════════════════════════
 // RENDER
-// ═══════════════════════════════════════════════
-function render() {
-  document.getElementById('user-name-display').textContent = S.userName;
-  document.getElementById('user-avatar').textContent = S.userName.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-  updateBadge();
-  const nav_el = document.querySelector(`.nav-item[data-page="${S.page}"]`);
-  if (nav_el) { document.querySelectorAll('.nav-item').forEach(e=>e.classList.remove('active')); nav_el.classList.add('active'); }
-  const c = document.getElementById('content');
-  if (S.page === 'dashboard') c.innerHTML = renderDashboard();
-  else if (S.page === 'deals') { c.innerHTML = renderDeals(); initDrag(); }
-  else if (S.page === 'chats') { c.innerHTML = renderChats(); }
-  else if (S.page === 'contacts') c.innerHTML = renderContacts();
-  else if (S.page === 'settings') c.innerHTML = renderSettings();
+function render(){
+  ubadge();
+  const el=document.querySelector(`.ni[data-page="${S.page}"]`);
+  if(el){document.querySelectorAll('.ni').forEach(e=>e.classList.remove('active'));el.classList.add('active');}
+  const c=document.getElementById('content');
+  if(S.page==='dashboard')c.innerHTML=rDash();
+  else if(S.page==='deals'){c.innerHTML=rDeals();initDrag();}
+  else if(S.page==='chats')c.innerHTML=rChats();
+  else if(S.page==='contacts')c.innerHTML=rContacts();
+  else if(S.page==='settings')c.innerHTML=rSettings();
 }
 
-// ── DASHBOARD ──────────────────────────────────
-function renderDashboard() {
-  const total = S.deals.reduce((s,d)=>s+d.amount,0);
-  const won = S.deals.filter(d=>d.stage==='won').reduce((s,d)=>s+d.amount,0);
-  const open = S.deals.filter(d=>d.stage!=='won').length;
-  const unread = S.chats.reduce((s,c)=>s+c.unread,0);
-  const avitoDeals = S.deals.filter(d=>d.source==='avito').length;
-  return `
-  <div class="stats-grid">
-    <div class="stat-card"><div class="stat-label">Воронка</div><div class="stat-value">${fmt(total)}</div><div class="stat-delta" style="color:var(--text2)">${S.deals.length} сделок</div></div>
-    <div class="stat-card"><div class="stat-label">Выиграно</div><div class="stat-value" style="color:var(--green)">${fmt(won)}</div><div class="stat-delta" style="color:var(--green)">закрытых: ${S.deals.filter(d=>d.stage==='won').length}</div></div>
-    <div class="stat-card"><div class="stat-label">В работе</div><div class="stat-value">${open}</div><div class="stat-delta" style="color:var(--text2)">открытых сделок</div></div>
-    <div class="stat-card"><div class="stat-label">Непрочитанных</div><div class="stat-value" style="color:var(--red)">${unread}</div><div class="stat-delta" style="color:var(--blue-text)">Авито: ${avitoDeals} сделок</div></div>
+function rDash(){
+  const tot=S.deals.reduce((s,d)=>s+d.amount,0);
+  const won=S.deals.filter(d=>d.stage==='won').reduce((s,d)=>s+d.amount,0);
+  const op=S.deals.filter(d=>d.stage!=='won').length;
+  const un=S.chats.reduce((s,c)=>s+c.unread,0);
+  const upco=[];
+  S.deals.forEach(d=>(d.reminders||[]).forEach(r=>{if(!r.done)upco.push({...r,dn:d.name,did:d.id});}));
+  upco.sort((a,b)=>new Date(a.datetime)-new Date(b.datetime));
+  return`<div class="sg">
+    <div class="sc"><div class="sl">Воронка</div><div class="sv">${fmt(tot)}</div><div style="font-size:11px;color:var(--text2);margin-top:5px">${S.deals.length} сделок</div></div>
+    <div class="sc"><div class="sl">Выиграно</div><div class="sv" style="color:var(--green)">${fmt(won)}</div><div style="font-size:11px;color:var(--green-text);margin-top:5px">закрытых: ${S.deals.filter(d=>d.stage==='won').length}</div></div>
+    <div class="sc"><div class="sl">В работе</div><div class="sv">${op}</div><div style="font-size:11px;color:var(--text2);margin-top:5px">открытых</div></div>
+    <div class="sc"><div class="sl">Сообщений</div><div class="sv" style="color:${un?'var(--red)':'var(--text)'}">${un}</div><div style="font-size:11px;color:var(--text2);margin-top:5px">непрочитанных</div></div>
   </div>
-  <div class="dash-grid">
-    <div class="dash-card">
-      <div class="dash-card-title">Последние сделки</div>
-      ${S.deals.slice(-5).reverse().map(d=>`
-        <div class="dash-row">
-          <div>
-            <div style="font-size:13px;font-weight:500">${d.name}</div>
-            <div style="font-size:11px;color:var(--text2)">${d.contact} · ${d.date||''}</div>
-          </div>
-          <div style="text-align:right">
-            <div style="font-size:13px;font-weight:600;color:var(--blue);font-family:var(--mono)">${fmt(d.amount)}</div>
-            <span class="tag tag-${d.source==='avito'?'avito':'phone'}">${d.source==='avito'?'Авито':'Тел.'}</span>
-          </div>
-        </div>`).join('')}
+  <div class="dg">
+    <div class="dcard"><div class="dcardt">Последние сделки</div>
+      ${S.deals.slice(-5).reverse().map(d=>`<div class="dr" style="cursor:pointer" onclick="openDeal(${d.id})">
+        <div><div style="font-size:13px;font-weight:500">${esc(d.name)}</div><div style="font-size:11px;color:var(--text2)">${esc(d.contact)}</div></div>
+        <div style="text-align:right"><div style="font-size:13px;font-weight:600;color:var(--blue);font-family:var(--mono)">${fmt(d.amount)}</div><span class="tag ${d.source==='avito'?'ta':'tp'}">${d.source==='avito'?'Авито':'Тел.'}</span></div>
+      </div>`).join('')}
     </div>
-    <div class="dash-card">
-      <div class="dash-card-title">Чаты</div>
-      ${S.chats.map(ch=>`
-        <div class="dash-row" style="cursor:pointer" onclick="openChatPage(${ch.id})">
-          <div style="display:flex;align-items:center;gap:9px">
-            <div class="ch-av" style="background:${ch.avBg};color:${ch.avTc};width:28px;height:28px;font-size:10px">${ch.av}</div>
-            <div>
-              <div style="font-size:13px;font-weight:${ch.unread?'600':'400'}">${ch.name}</div>
-              <div style="font-size:11px;color:var(--text2);overflow:hidden;white-space:nowrap;max-width:160px;text-overflow:ellipsis">${ch.messages[ch.messages.length-1]?.text||''}</div>
-            </div>
-          </div>
-          ${ch.unread?`<span style="background:var(--red);color:#fff;border-radius:20px;padding:1px 7px;font-size:10px;font-weight:600;font-family:var(--mono)">${ch.unread}</span>`:''}
+    <div class="dcard"><div class="dcardt">Ближайшие будильники</div>
+      ${upco.length===0?'<div style="font-size:13px;color:var(--text3);padding:12px 0">Нет запланированных</div>':
+        upco.slice(0,6).map(r=>`<div class="dr" style="cursor:pointer" onclick="openDeal(${r.did})">
+          <div><div style="font-size:13px;font-weight:500">${esc(r.text)}</div><div style="font-size:11px;color:var(--text2)">${esc(r.dn)}</div></div>
+          <div style="font-size:11px;font-family:var(--mono);color:${isOv(r.datetime)?'var(--red-text)':'var(--text3)'}">${fdt(r.datetime)}</div>
         </div>`).join('')}
     </div>
   </div>`;
 }
 
-// ── DEALS KANBAN ────────────────────────────────
-function renderDeals() {
-  return `<div class="kanban-wrap" id="kanban">
-    ${STAGES.map(s=>{
-      const colDeals = S.deals.filter(d=>d.stage===s.key);
-      return `<div class="kol" data-stage="${s.key}">
-        <div class="kol-head" style="background:${s.bg};color:${s.tc}">
-          <span>${s.label}</span>
-          <span style="opacity:.65;font-size:11px;font-family:var(--mono)">${colDeals.length} · ${fmt(colDeals.reduce((a,d)=>a+d.amount,0))}</span>
-        </div>
-        <div class="kol-body" id="kbody-${s.key}"
-          ondragover="onColDragOver(event,'${s.key}')"
-          ondragleave="onColDragLeave(event,'${s.key}')"
-          ondrop="onColDrop(event,'${s.key}')">
-          ${colDeals.map(d=>`
-            <div class="drop-line" id="dline-${d.id}"></div>
-            <div class="deal-card" id="dcard-${d.id}" draggable="true"
-              ondragstart="onDragStart(event,${d.id})"
-              ondragend="onDragEnd()"
-              ondragover="onCardDragOver(event,${d.id})">
-              <div class="deal-name">${d.name}</div>
-              <div class="deal-contact">${d.contact}</div>
-              <div class="deal-amount">${fmt(d.amount)}</div>
-              <div class="deal-footer">
-                <span class="tag tag-${d.source==='avito'?'avito':'phone'}">${d.source==='avito'?'Авито':'Телефон'}</span>
-                <span class="deal-date">${d.date||''}</span>
-              </div>
-            </div>`).join('')}
-          <div class="drop-line" id="dline-end-${s.key}"></div>
-          <div class="kol-add" onclick="openModal('new-deal','${s.key}')">+ добавить</div>
-        </div>
-      </div>`;
-    }).join('')}
-  </div>`;
+function rDeals(){
+  return`<div class="kw" id="kanban">${STAGES.map(s=>{
+    const cols=S.deals.filter(d=>d.stage===s.key);
+    return`<div class="kol" data-stage="${s.key}">
+      <div class="kh" style="background:${s.bg};color:${s.tc}"><span>${s.label}</span><span style="opacity:.65;font-size:11px;font-family:var(--mono)">${cols.length} · ${fmt(cols.reduce((a,d)=>a+d.amount,0))}</span></div>
+      <div class="kb" id="kb-${s.key}" ondragover="oCDO(event,'${s.key}')" ondragleave="oCDL(event,'${s.key}')" ondrop="oCDrop(event,'${s.key}')">
+        ${cols.map(d=>{
+          const hr=(d.reminders||[]).some(r=>!r.done);
+          const ov=(d.reminders||[]).some(r=>!r.done&&isOv(r.datetime));
+          const mc=(d.messages||[]).length;
+          return`<div class="dl" id="dl-${d.id}"></div>
+          <div class="dc" id="dc-${d.id}" draggable="true" ondragstart="oDS(event,${d.id})" ondragend="oDE()" ondragover="oCDO2(event,${d.id})">
+            ${hr?`<div class="rbadge ${ov?'ov':''}" title="Есть будильник"></div>`:''}
+            <div class="dn">${esc(d.name)}</div><div class="dct">${esc(d.contact)}</div>
+            <div class="dam">${fmt(d.amount)}</div>
+            <div class="df"><span class="tag ${d.source==='avito'?'ta':'tp'}">${d.source==='avito'?'Авито':'Телефон'}</span><span class="dd">${d.date||''}</span></div>
+            <div class="dco" onclick="openDeal(${d.id})"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3H3a1 1 0 00-1 1v9a1 1 0 001 1h9a1 1 0 001-1V8"/><path d="M13 1h2v2M15 1l-7 7"/></svg>Открыть карточку${mc?' · 💬 '+mc:''}</div>
+          </div>`;
+        }).join('')}
+        <div class="dl" id="dl-e-${s.key}"></div>
+        <div class="kadd" onclick="openModal('new-deal','${s.key}')">+ добавить</div>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
 }
 
-// ── DRAG & DROP ─────────────────────────────────
-let dragId=null, dragOverCol=null, dropBeforeId=null;
-
+// DRAG
+let drid=null,droc=null,drob=null;
 function initDrag(){}
-
-function onDragStart(e,id){
-  dragId=id;
-  setTimeout(()=>{ const el=document.getElementById('dcard-'+id); if(el) el.classList.add('dragging'); },0);
-  e.dataTransfer.effectAllowed='move';
-}
-function onDragEnd(){
-  if(dragId){ const el=document.getElementById('dcard-'+dragId); if(el) el.classList.remove('dragging'); }
-  clearDragUI(); dragId=null; dragOverCol=null; dropBeforeId=null;
-}
-function clearDragUI(){
-  document.querySelectorAll('.kol-body').forEach(el=>el.classList.remove('drag-over'));
-  document.querySelectorAll('.drop-line').forEach(el=>el.style.display='none');
-}
-function onColDragOver(e,sk){
-  e.preventDefault(); e.dataTransfer.dropEffect='move';
-  if(dragOverCol!==sk){ clearDragUI(); dragOverCol=sk; }
-  document.getElementById('kbody-'+sk).classList.add('drag-over');
-  const dl=document.getElementById('dline-end-'+sk); if(dl) dl.style.display='block';
-  dropBeforeId=null;
-}
-function onCardDragOver(e,tid){
-  e.preventDefault(); e.stopPropagation();
-  if(tid===dragId) return;
-  const sk=S.deals.find(d=>d.id===tid)?.stage; if(!sk) return;
-  clearDragUI(); dragOverCol=sk;
-  document.getElementById('kbody-'+sk).classList.add('drag-over');
-  const dl=document.getElementById('dline-'+tid); if(dl) dl.style.display='block';
-  dropBeforeId=tid;
-}
-function onColDragLeave(e,sk){
-  const body=document.getElementById('kbody-'+sk);
-  if(body && !body.contains(e.relatedTarget)){ body.classList.remove('drag-over'); clearDragUI(); dragOverCol=null; dropBeforeId=null; }
-}
-function onColDrop(e,sk){
-  e.preventDefault(); if(dragId===null) return;
-  const deal=S.deals.find(d=>d.id===dragId); if(!deal) return;
-  const oldStage=deal.stage;
-  S.deals=S.deals.filter(d=>d.id!==dragId);
-  if(dropBeforeId!==null){
-    const idx=S.deals.findIndex(d=>d.id===dropBeforeId);
-    deal.stage=sk; S.deals.splice(idx,0,deal);
-  } else {
-    deal.stage=sk;
-    const last=S.deals.filter(d=>d.stage===sk).slice(-1)[0];
-    if(last){ S.deals.splice(S.deals.findIndex(d=>d.id===last.id)+1,0,deal); } else { S.deals.push(deal); }
-  }
-  if(oldStage!==sk) toast(`Сделка → "${STAGES.find(s=>s.key===sk)?.label}"`);
-  save(); render();
+function oDS(e,id){drid=id;setTimeout(()=>{const el=document.getElementById('dc-'+id);if(el)el.classList.add('dragging');},0);e.dataTransfer.effectAllowed='move';}
+function oDE(){if(drid){const el=document.getElementById('dc-'+drid);if(el)el.classList.remove('dragging');}clrDr();drid=null;droc=null;drob=null;}
+function clrDr(){document.querySelectorAll('.kb').forEach(el=>el.classList.remove('dov'));document.querySelectorAll('.dl').forEach(el=>el.style.display='none');}
+function oCDO(e,sk){e.preventDefault();e.dataTransfer.dropEffect='move';if(droc!==sk){clrDr();droc=sk;}document.getElementById('kb-'+sk)?.classList.add('dov');const dl=document.getElementById('dl-e-'+sk);if(dl)dl.style.display='block';drob=null;}
+function oCDO2(e,tid){e.preventDefault();e.stopPropagation();if(tid===drid)return;const sk=S.deals.find(d=>d.id===tid)?.stage;if(!sk)return;clrDr();droc=sk;document.getElementById('kb-'+sk)?.classList.add('dov');const dl=document.getElementById('dl-'+tid);if(dl)dl.style.display='block';drob=tid;}
+function oCDL(e,sk){const b=document.getElementById('kb-'+sk);if(b&&!b.contains(e.relatedTarget)){b.classList.remove('dov');clrDr();droc=null;drob=null;}}
+function oCDrop(e,sk){
+  e.preventDefault();if(drid===null)return;
+  const d=S.deals.find(d=>d.id===drid);if(!d)return;
+  const old=d.stage;S.deals=S.deals.filter(d=>d.id!==drid);
+  if(drob!==null){const i=S.deals.findIndex(d=>d.id===drob);d.stage=sk;S.deals.splice(i,0,d);}
+  else{d.stage=sk;const l=S.deals.filter(d=>d.stage===sk).slice(-1)[0];if(l){S.deals.splice(S.deals.findIndex(d=>d.id===l.id)+1,0,d);}else{S.deals.push(d);}}
+  if(old!==sk)toast('Сделка → "'+STAGES.find(s=>s.key===sk)?.label+'"');
+  save();render();
 }
 
-// ── CHATS ───────────────────────────────────────
-function renderChats(){
-  const ch=S.chats[S.activeChat]||S.chats[0];
-  return `
-  <div class="avito-banner">
-    <div style="font-size:13px;font-weight:600;color:var(--blue-text);margin-bottom:4px">Подключение реальных чатов Авито</div>
-    <div style="font-size:12px;color:var(--blue-text);line-height:1.7;opacity:.85">
-      Авито не даёт открытый API для чатов. Варианты: <b>Авито Pro API</b> (партнёрский акк.) · <b>Расширение Chrome</b> · <b>n8n/Make.com webhook</b>
+// DEAL PANEL
+function openDeal(id){
+  S.openDeal=id;rPanel();
+  document.getElementById('pov').classList.add('open');
+  document.getElementById('dpanel').classList.add('open');
+  askNotif();
+  setTimeout(()=>{const ml=document.getElementById('dpml');if(ml)ml.scrollTop=ml.scrollHeight;},80);
+}
+function closePanel(){document.getElementById('pov').classList.remove('open');document.getElementById('dpanel').classList.remove('open');S.openDeal=null;}
+function rPanel(){
+  const d=S.deals.find(d=>d.id===S.openDeal);if(!d)return;
+  document.getElementById('dptit').textContent=d.name;
+  document.getElementById('dpinfo').innerHTML=`
+    <div>
+      <div class="dst">Основное</div>
+      <div class="dfield"><b>Контакт:</b> ${esc(d.contact)}</div>
+      <div class="dfield"><b>Источник:</b> <span class="tag ${d.source==='avito'?'ta':'tp'}">${d.source==='avito'?'Авито':'Телефон'}</span></div>
+      <div class="dfield"><b>Сумма:</b> <span style="color:var(--blue);font-family:var(--mono)">${fmt(d.amount)}</span></div>
+      <div class="dfield"><b>Дата:</b> ${d.date||'—'}</div>
     </div>
-    <div style="display:flex;gap:8px;margin-top:8px">
-      <button class="btn btn-sm btn-primary" onclick="nav('settings')">Настроить интеграцию →</button>
+    <div>
+      <div class="dst">Стадия</div>
+      <select class="dpss" onchange="chStage(${d.id},this.value)">${STAGES.map(s=>`<option value="${s.key}"${d.stage===s.key?' selected':''}>${s.label}</option>`).join('')}</select>
     </div>
+    <div>
+      <div class="dst">Примечание</div>
+      <textarea class="nota" id="dpnote" placeholder="Заметки по сделке..." oninput="saveNote(${d.id},this.value)">${esc(d.note||'')}</textarea>
+    </div>
+    <div>
+      <div class="rb">
+        <div class="dst" style="margin-bottom:0;display:flex;justify-content:space-between;align-items:center">
+          <span>Будильники</span>
+          <button class="btn btn-s" onclick="openModal('add-rem',${d.id})" style="padding:3px 9px;font-size:11px">+ Добавить</button>
+        </div>
+        <div class="rl" id="dprl">${rRemList(d)}</div>
+      </div>
+    </div>
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:6px">
+      <button class="btn btn-s" onclick="openModal('edit-deal',${d.id})">✏️ Редактировать</button>
+      ${isAdmin()?`<button class="btn btn-s btn-d" onclick="delDeal(${d.id})">🗑 Удалить</button>`:''}
+    </div>
+  `;
+  document.getElementById('dpchat').innerHTML=`
+    <div class="dpch"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2H3a1 1 0 00-1 1v7a1 1 0 001 1h2l3 3 3-3h2a1 1 0 001-1V3a1 1 0 00-1-1z"/></svg>Переписка — ${(d.messages||[]).length} сообщений</div>
+    <div class="msgs" id="dpml">
+      ${(d.messages||[]).length===0?'<div style="text-align:center;color:var(--text3);padding:24px;font-size:13px">Сообщений пока нет</div>':''}
+      ${(d.messages||[]).map(m=>`<div class="msg ${m.out?'mo':'mi'}">${!m.out&&m.author?`<div class="mau">${esc(m.author)}</div>`:''}${esc(m.text)}<div class="mt">${m.time||''}</div></div>`).join('')}
+    </div>
+    <div class="inr">
+      <textarea id="dpmsg" placeholder="Написать сообщение... (Enter — отправить)" rows="1"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDM(${d.id})}"
+        oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+      <button class="btn btn-p" onclick="sendDM(${d.id})"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2L2 6.5l5 2 2 5 5-12z"/></svg></button>
+    </div>
+  `;
+}
+function rRemList(d){
+  if(!d.reminders||d.reminders.length===0)return'<div style="font-size:12px;color:var(--text3);padding:4px 0">Нет напоминаний</div>';
+  return d.reminders.map(r=>`<div class="ri ${r.done?'done':''} ${!r.done&&isOv(r.datetime)?'ov':''}" id="ri-${r.id}">
+    <input type="checkbox" ${r.done?'checked':''} onchange="togRem(${d.id},${r.id})" style="flex-shrink:0;cursor:pointer">
+    <div class="rit">${esc(r.text)}</div><div class="ritm">${fdt(r.datetime)}</div>
+    <button class="ridel" onclick="delRem(${d.id},${r.id})">✕</button>
+  </div>`).join('');
+}
+function chStage(id,s){const d=S.deals.find(d=>d.id===id);if(!d)return;d.stage=s;save();render();toast('Стадия → "'+STAGES.find(x=>x.key===s)?.label+'"');}
+function saveNote(id,v){const d=S.deals.find(d=>d.id===id);if(d){d.note=v;save();}}
+function sendDM(id){
+  const t=document.getElementById('dpmsg');if(!t||!t.value.trim())return;
+  const d=S.deals.find(d=>d.id===id);if(!d)return;
+  if(!d.messages)d.messages=[];
+  d.messages.push({out:true,text:t.value.trim(),time:nowt(),author:S.user?.name||'Менеджер'});
+  t.value='';save();rPanel();
+  setTimeout(()=>{const ml=document.getElementById('dpml');if(ml)ml.scrollTop=ml.scrollHeight;},40);
+}
+function togRem(did,rid){const d=S.deals.find(d=>d.id===did);if(!d)return;const r=d.reminders.find(r=>r.id===rid);if(!r)return;r.done=!r.done;save();const el=document.getElementById('dprl');if(el)el.innerHTML=rRemList(d);if(S.page==='deals')render();}
+function delRem(did,rid){const d=S.deals.find(d=>d.id===did);if(!d)return;d.reminders=d.reminders.filter(r=>r.id!==rid);save();const el=document.getElementById('dprl');if(el)el.innerHTML=rRemList(d);if(S.page==='deals')render();}
+function delDeal(id){if(!confirm('Удалить сделку?'))return;S.deals=S.deals.filter(d=>d.id!==id);save();closePanel();render();toast('Сделка удалена','e');}
+
+// CHATS
+function rChats(){
+  const ch=S.chats[S.ac]||S.chats[0];
+  if(!ch)return'<div style="padding:20px;color:var(--text2)">Нет чатов</div>';
+  return`<div class="abb">
+    <div style="font-size:13px;font-weight:600;color:var(--blue-text);margin-bottom:3px">Подключение реальных чатов Авито</div>
+    <div style="font-size:12px;color:var(--blue-text);line-height:1.7;opacity:.85">Авито Pro API · Расширение Chrome · n8n/Make.com</div>
+    <button class="btn btn-s btn-p" style="margin-top:8px" onclick="nav('settings')">Настроить →</button>
   </div>
-  <div class="chat-layout">
-    <div class="chat-list">
-      <div class="chat-list-header">Диалоги (${S.chats.length})</div>
-      ${S.chats.map((c,i)=>`
-        <div class="chat-item ${i===S.activeChat?'active':''}" onclick="setChat(${i})">
-          <div class="ch-row">
-            <div class="ch-av" style="background:${c.avBg};color:${c.avTc};width:36px;height:36px;font-size:12px">${c.av}</div>
-            <div class="ch-meta">
-              <div style="display:flex;justify-content:space-between;align-items:baseline">
-                <div class="ch-name">${c.name}</div>
-                <div class="ch-time">${c.time}</div>
-              </div>
-              <div class="ch-preview">${c.messages[c.messages.length-1]?.text||''}</div>
-              <div class="ch-ad">📌 ${c.ad}</div>
-            </div>
-            ${c.unread?`<div class="unread-dot"></div>`:''}
+  <div class="chl">
+    <div class="chlist">
+      <div class="cllh">Диалоги (${S.chats.length})</div>
+      ${S.chats.map((c,i)=>`<div class="chi ${i===S.ac?'active':''}" onclick="setChat(${i})">
+        <div class="chrow">
+          <div class="chav" style="background:${c.avBg};color:${c.avTc};width:36px;height:36px;font-size:12px">${c.av}</div>
+          <div class="chm">
+            <div style="display:flex;justify-content:space-between;align-items:baseline"><div class="chn">${esc(c.name)}</div><div class="cht">${c.time}</div></div>
+            <div class="chp">${esc((c.messages[c.messages.length-1]?.text)||'')}</div>
+            <div class="cha">📌 ${esc(c.ad)}</div>
           </div>
-        </div>`).join('')}
-      <div style="padding:10px 14px">
-        <button class="btn btn-sm" style="width:100%" onclick="openModal('new-chat')">+ Новый чат</button>
-      </div>
-    </div>
-    <div class="chat-window">
-      <div class="chat-whead">
-        <div class="ch-av" style="background:${ch.avBg};color:${ch.avTc};width:34px;height:34px;font-size:12px">${ch.av}</div>
-        <div class="chat-whead-info">
-          <div class="chat-whead-name">${ch.name}</div>
-          <div class="chat-whead-sub">📌 ${ch.ad}</div>
-        </div>
-        <span class="tag tag-avito">Авито</span>
-        <button class="btn btn-sm" onclick="openModal('link-deal')">Привязать к сделке</button>
-      </div>
-      <div class="messages" id="msg-list">
-        ${ch.messages.map(m=>`
-          <div class="msg ${m.out?'msg-out':'msg-in'}">${escHtml(m.text)}<div class="msg-time">${m.time}</div></div>`).join('')}
-      </div>
-      <div class="msg-input-row">
-        <textarea id="msg-text" placeholder="Написать сообщение... (Enter — отправить)" rows="1"
-          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"
-          oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
-        <button class="btn btn-primary" onclick="sendMsg()">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2L2 6.5l5 2 2 5 5-12z"/></svg>
-        </button>
-      </div>
-    </div>
-  </div>`;
-}
-
-function setChat(i){
-  S.activeChat=i; S.chats[i].unread=0;
-  save(); render();
-  setTimeout(()=>{ const ml=document.getElementById('msg-list'); if(ml) ml.scrollTop=ml.scrollHeight; },60);
-}
-
-function sendMsg(){
-  const t=document.getElementById('msg-text');
-  if(!t||!t.value.trim()) return;
-  S.chats[S.activeChat].messages.push({out:true,text:t.value.trim(),time:nowTime()});
-  S.chats[S.activeChat].time=nowTime();
-  t.value=''; save(); render();
-  setTimeout(()=>{ const ml=document.getElementById('msg-list'); if(ml) ml.scrollTop=ml.scrollHeight; },60);
-}
-
-function openChatPage(id){
-  S.activeChat=id; S.chats[id].unread=0;
-  nav('chats');
-}
-
-function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-// ── CONTACTS ────────────────────────────────────
-function renderContacts(){
-  const q=(document.getElementById('search-input')?.value||'').toLowerCase();
-  const list=q ? S.contacts.filter(c=>c.name.toLowerCase().includes(q)||c.phone.includes(q)) : S.contacts;
-  return `<div class="contacts-grid">
-    ${list.map(c=>`
-      <div class="contact-card">
-        <div class="cc-header">
-          <div class="avatar" style="width:40px;height:40px;font-size:14px">${c.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}</div>
-          <div>
-            <div style="font-size:14px;font-weight:600">${c.name}</div>
-            <span class="tag tag-${c.source==='avito'?'avito':'phone'}">${c.source==='avito'?'Авито':'Телефон'}</span>
-          </div>
-        </div>
-        <div class="cc-info">
-          <div>📞 ${c.phone}</div>
-          ${c.note?`<div>📝 ${c.note}</div>`:''}
-          <div>📋 Сделок: ${S.deals.filter(d=>d.contact===c.name).length}</div>
-        </div>
-        <div class="cc-actions">
-          <button class="btn btn-sm" onclick="openChatPage(${S.chats.findIndex(ch=>ch.name===c.name)>=0?S.chats.findIndex(ch=>ch.name===c.name):0})">Чат</button>
-          <button class="btn btn-sm" onclick="openModal('new-deal-contact','${c.name}')">+ Сделка</button>
-          <button class="btn btn-sm" style="color:var(--red);border-color:var(--red)" onclick="deleteContact(${c.id})">✕</button>
+          ${c.unread?'<div class="ud"></div>':''}
         </div>
       </div>`).join('')}
-    <div class="contact-card add-card" onclick="openModal('new-contact')">
-      <div style="text-align:center;color:var(--text3)">
-        <div style="font-size:28px;margin-bottom:8px">+</div>
-        <div style="font-size:13px">Добавить контакт</div>
+      <div style="padding:10px 14px"><button class="btn btn-s" style="width:100%" onclick="openModal('new-chat')">+ Новый чат</button></div>
+    </div>
+    <div class="chwin">
+      <div class="chwh">
+        <div class="chav" style="background:${ch.avBg};color:${ch.avTc};width:34px;height:34px;font-size:12px">${ch.av}</div>
+        <div style="flex:1"><div style="font-size:14px;font-weight:600">${esc(ch.name)}</div><div style="font-size:11px;color:var(--text2)">📌 ${esc(ch.ad)}</div></div>
+        <span class="tag ta">Авито</span>
+        <button class="btn btn-s" onclick="openModal('link-deal')">Привязать к сделке</button>
+      </div>
+      <div class="msgs" id="ml">
+        ${ch.messages.map(m=>`<div class="msg ${m.out?'mo':'mi'}">${esc(m.text)}<div class="mt">${m.time||''}</div></div>`).join('')}
+      </div>
+      <div class="inr">
+        <textarea id="cht" placeholder="Написать... (Enter)" rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendCM()}"
+          oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+        <button class="btn btn-p" onclick="sendCM()"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2L2 6.5l5 2 2 5 5-12z"/></svg></button>
       </div>
     </div>
   </div>`;
 }
+function setChat(i){S.ac=i;S.chats[i].unread=0;save();render();setTimeout(()=>{const ml=document.getElementById('ml');if(ml)ml.scrollTop=ml.scrollHeight;},60);}
+function sendCM(){const t=document.getElementById('cht');if(!t||!t.value.trim())return;S.chats[S.ac].messages.push({out:true,text:t.value.trim(),time:nowt()});S.chats[S.ac].time=nowt();t.value='';save();render();setTimeout(()=>{const ml=document.getElementById('ml');if(ml)ml.scrollTop=ml.scrollHeight;},60);}
 
-function deleteContact(id){
-  if(!confirm('Удалить контакт?')) return;
-  S.contacts=S.contacts.filter(c=>c.id!==id);
-  save(); render(); toast('Контакт удалён','error');
-}
-
-// ── SETTINGS ────────────────────────────────────
-function renderSettings(){
-  return `
-  <div class="settings-section">
-    <div class="settings-title">Профиль</div>
-    <div style="display:flex;align-items:center;gap:14px">
-      <div class="avatar" style="width:48px;height:48px;font-size:18px">${S.userName.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}</div>
-      <div style="flex:1">
-        <div style="font-size:13px;color:var(--text2);margin-bottom:5px">Ваше имя</div>
-        <div style="display:flex;gap:8px">
-          <input id="uname-input" value="${S.userName}" style="flex:1;padding:7px 11px;border:1px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-size:13px;outline:none;font-family:var(--font)">
-          <button class="btn btn-primary btn-sm" onclick="saveName()">Сохранить</button>
-        </div>
+// CONTACTS
+function rContacts(){
+  const q=(document.getElementById('sinput')?.value||'').toLowerCase();
+  const list=q?S.contacts.filter(c=>c.name.toLowerCase().includes(q)||c.phone.includes(q)):S.contacts;
+  return`<div class="cg">
+    ${list.map(c=>`<div class="cc">
+      <div class="cch">
+        <div class="av" style="width:40px;height:40px;font-size:14px">${c.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}</div>
+        <div><div style="font-size:14px;font-weight:600">${esc(c.name)}</div><span class="tag ${c.source==='avito'?'ta':'tp'}">${c.source==='avito'?'Авито':'Телефон'}</span></div>
       </div>
-    </div>
+      <div class="cci"><div>📞 ${esc(c.phone)}</div>${c.note?`<div>📝 ${esc(c.note)}</div>`:''}<div>📋 Сделок: ${S.deals.filter(d=>d.contact===c.name).length}</div></div>
+      <div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn btn-s" onclick="openModal('new-deal-c','${esc(c.name)}')">+ Сделка</button>
+        ${isAdmin()?`<button class="btn btn-s btn-d" onclick="delC(${c.id})">✕</button>`:''}
+      </div>
+    </div>`).join('')}
+    <div class="cc ac" onclick="openModal('new-contact')"><div style="text-align:center;color:var(--text3)"><div style="font-size:28px;margin-bottom:8px">+</div><div style="font-size:13px">Добавить контакт</div></div></div>
+  </div>`;
+}
+function delC(id){if(!confirm('Удалить?'))return;S.contacts=S.contacts.filter(c=>c.id!==id);save();render();toast('Контакт удалён','e');}
+
+// SETTINGS
+function rSettings(){
+  if(!isAdmin())return'<div style="padding:24px;color:var(--text2)">Нет доступа</div>';
+  return`<div class="ss">
+    <div class="st">Менеджеры</div>
+    <table class="mt2">
+      <thead><tr><th>Имя</th><th>Логин</th><th>Пароль</th><th>Роль</th><th></th></tr></thead>
+      <tbody>${S.managers.map(m=>`<tr>
+        <td style="font-weight:500">${esc(m.name)}</td>
+        <td style="font-family:var(--mono);font-size:12px">${esc(m.login)}</td>
+        <td style="font-family:var(--mono);font-size:12px">${esc(m.password)}</td>
+        <td><span class="rbg ${m.role==='admin'?'ra':'rm'}">${m.role==='admin'?'Администратор':'Менеджер'}</span></td>
+        <td>${m.id!==S.user.id?`<button class="btn btn-s btn-d" onclick="delMgr(${m.id})">✕</button>`:'<span style="font-size:11px;color:var(--text3)">вы</span>'}</td>
+      </tr>`).join('')}</tbody>
+    </table>
+    <div style="margin-top:12px"><button class="btn btn-s btn-p" onclick="openModal('new-mgr')">+ Добавить менеджера</button></div>
   </div>
-  <div class="settings-section">
-    <div class="settings-title">Интеграции</div>
-    <div class="int-row">
-      <div class="int-icon" style="background:var(--blue-bg);font-size:18px">🟠</div>
-      <div class="int-info"><div class="int-name">Авито Чаты</div><div class="int-desc">Авито Pro API или расширение браузера</div></div>
-      <div class="status-dot" style="background:#f59e0b"></div>
-      <button class="btn btn-sm btn-primary" onclick="openModal('avito-setup')">Подключить</button>
-    </div>
-    <div class="int-row">
-      <div class="int-icon" style="background:var(--green-bg);font-size:18px">💬</div>
-      <div class="int-info"><div class="int-name">WhatsApp Business</div><div class="int-desc">Официальный WABA API</div></div>
-      <div class="status-dot" style="background:var(--border2)"></div>
-      <button class="btn btn-sm">Настроить</button>
-    </div>
-    <div class="int-row">
-      <div class="int-icon" style="background:var(--purple-bg);font-size:18px">✈️</div>
-      <div class="int-info"><div class="int-name">Telegram</div><div class="int-desc">Через Telegram Bot API</div></div>
-      <div class="status-dot" style="background:var(--green)"></div>
-      <span style="font-size:12px;color:var(--green-text);font-weight:500">Подключён</span>
-    </div>
+  <div class="ss">
+    <div class="st">Интеграции</div>
+    <div class="ir"><div class="ii" style="background:var(--blue-bg)">🟠</div><div class="iin"><div class="iit">Авито Чаты</div><div class="iid">Авито Pro API или расширение</div></div><div class="sdot" style="background:#f59e0b"></div><button class="btn btn-s btn-p" onclick="openModal('avito')">Подключить</button></div>
+    <div class="ir"><div class="ii" style="background:var(--purple-bg)">✈️</div><div class="iin"><div class="iit">Telegram Bot</div><div class="iid">Через Bot API</div></div><div class="sdot" style="background:var(--green)"></div><span style="font-size:12px;color:var(--green-text);font-weight:500">Подключён</span></div>
   </div>
-  <div class="settings-section">
-    <div class="settings-title">Как подключить Авито</div>
-    <div style="font-size:13px;line-height:1.9;color:var(--text2)">
-      <b style="color:var(--text)">Способ 1 — Авито Pro API</b><br>
-      Нужен партнёрский аккаунт. Endpoint для получения чатов:
-    </div>
-    <div class="code-block">GET https://api.avito.ru/messenger/v3/accounts/{userId}/chats<br>Authorization: Bearer {access_token}</div>
-    <div style="font-size:13px;line-height:1.9;color:var(--text2);margin-top:12px">
-      <b style="color:var(--text)">Способ 2 — n8n / Make.com</b><br>
-      Настройте триггер на Авито → вебхук → добавьте функцию приёма в эту CRM через <code style="background:var(--surface2);padding:1px 5px;border-radius:4px;font-family:var(--mono)">window.receiveChatMessage()</code>
-    </div>
-  </div>
-  <div class="settings-section">
-    <div class="settings-title">Данные</div>
+  <div class="ss">
+    <div class="st">Данные</div>
     <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <button class="btn btn-sm" onclick="exportData()">Экспорт JSON</button>
-      <button class="btn btn-sm" onclick="document.getElementById('import-file').click()">Импорт JSON</button>
-      <input id="import-file" type="file" accept=".json" style="display:none" onchange="importData(this)">
-      <button class="btn btn-sm" style="color:var(--red);border-color:var(--red)" onclick="resetData()">Сбросить данные</button>
+      <button class="btn btn-s" onclick="expD()">Экспорт JSON</button>
+      <button class="btn btn-s" onclick="document.getElementById('ifile').click()">Импорт JSON</button>
+      <input id="ifile" type="file" accept=".json" style="display:none" onchange="impD(this)">
+      <button class="btn btn-s btn-d" onclick="resetD()">Сбросить данные</button>
     </div>
-    <div style="font-size:11px;color:var(--text3);margin-top:10px">Все данные хранятся в localStorage вашего браузера</div>
+    <div style="font-size:11px;color:var(--text3);margin-top:10px">Данные хранятся в localStorage браузера</div>
   </div>`;
 }
+function delMgr(id){if(!confirm('Удалить менеджера?'))return;S.managers=S.managers.filter(m=>m.id!==id);save();render();toast('Менеджер удалён','e');}
+function expD(){const b=new Blob([JSON.stringify({deals:S.deals,contacts:S.contacts,chats:S.chats,managers:S.managers},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='crm-export.json';a.click();}
+function impD(i){const f=i.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(d.deals)S.deals=d.deals;if(d.contacts)S.contacts=d.contacts;if(d.chats)S.chats=d.chats;if(d.managers)S.managers=d.managers;save();render();toast('Импортировано');}catch{toast('Ошибка','e');}};r.readAsText(f);}
+function resetD(){if(!confirm('Сбросить всё?'))return;S.deals=[...DD];S.contacts=[...DC];S.chats=[...DCH];S.managers=[...DM];S.ndi=10;S.nci=10;save();render();toast('Сброшено','e');}
 
-function saveName(){
-  const v=document.getElementById('uname-input')?.value?.trim();
-  if(v){ S.userName=v; save(); render(); toast('Имя сохранено'); }
-}
-function exportData(){
-  const blob=new Blob([JSON.stringify({deals:S.deals,contacts:S.contacts,chats:S.chats},null,2)],{type:'application/json'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='crm-export.json'; a.click();
-}
-function importData(input){
-  const file=input.files[0]; if(!file) return;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    try{
-      const d=JSON.parse(e.target.result);
-      if(d.deals) S.deals=d.deals;
-      if(d.contacts) S.contacts=d.contacts;
-      if(d.chats) S.chats=d.chats;
-      save(); render(); toast('Данные импортированы');
-    } catch{ toast('Ошибка файла','error'); }
-  };
-  reader.readAsText(file);
-}
-function resetData(){
-  if(!confirm('Удалить все данные? Это действие нельзя отменить.')) return;
-  S.deals=[...defaultDeals]; S.contacts=[...defaultContacts]; S.chats=[...defaultChats];
-  S.nextDealId=10; S.nextContactId=10;
-  save(); render(); toast('Данные сброшены','error');
-}
-
-// ═══════════════════════════════════════════════
-// SEARCH
-// ═══════════════════════════════════════════════
-function handleSearch(v){
-  if(S.page==='contacts') render();
-  else if(v && S.page==='deals'){
-    const found=S.deals.filter(d=>d.name.toLowerCase().includes(v.toLowerCase())||d.contact.toLowerCase().includes(v.toLowerCase()));
-    if(found.length===1){ toast(`Найдено: ${found[0].name}`); }
-  }
-}
-
-// ═══════════════════════════════════════════════
 // MODALS
-// ═══════════════════════════════════════════════
-function openModal(type, extra){
-  const mo=document.getElementById('modal-overlay');
-  const m=document.getElementById('modal');
+function openModal(t,x){
+  const mo=document.getElementById('mo'),m=document.getElementById('mbox');
   mo.classList.add('open');
-
-  if(type==='new-deal'||type==='new-deal-contact'){
-    const preContact=extra||'';
-    const preStage=type==='new-deal'&&extra&&STAGES.find(s=>s.key===extra)?extra:'new';
-    m.innerHTML=`
-      <div class="modal-title">Новая сделка</div>
-      <div class="form-group"><label class="form-label">Название</label><input id="fd-name" placeholder="Кухня, шкаф..."></div>
-      <div class="form-group"><label class="form-label">Контакт</label>
-        <select id="fd-contact">
-          ${S.contacts.map(c=>`<option value="${c.name}" ${c.name===preContact?'selected':''}>${c.name}</option>`).join('')}
-          <option value="__new__">+ Новый контакт</option>
-        </select>
-      </div>
-      <div class="form-group"><label class="form-label">Сумма (₽)</label><input id="fd-amount" type="number" placeholder="150000"></div>
-      <div class="form-group"><label class="form-label">Стадия</label>
-        <select id="fd-stage">${STAGES.map(s=>`<option value="${s.key}" ${s.key===preStage?'selected':''}>${s.label}</option>`).join('')}</select>
-      </div>
-      <div class="form-group"><label class="form-label">Источник</label>
-        <select id="fd-source"><option value="avito">Авито</option><option value="phone">Телефон</option><option value="site">Сайт</option></select>
-      </div>
-      <div class="modal-btns">
-        <button class="btn" onclick="closeModal()">Отмена</button>
-        <button class="btn btn-primary" onclick="addDeal()">Создать</button>
-      </div>`;
-  }
-  else if(type==='new-contact'){
-    m.innerHTML=`
-      <div class="modal-title">Новый контакт</div>
-      <div class="form-group"><label class="form-label">Имя</label><input id="fc-name" placeholder="Иван Иванов"></div>
-      <div class="form-group"><label class="form-label">Телефон</label><input id="fc-phone" placeholder="+7 900 000-00-00"></div>
-      <div class="form-group"><label class="form-label">Источник</label>
-        <select id="fc-src"><option value="avito">Авито</option><option value="phone">Телефон</option></select>
-      </div>
-      <div class="form-group"><label class="form-label">Заметка</label><textarea id="fc-note" rows="2" placeholder="Комментарий..."></textarea></div>
-      <div class="modal-btns">
-        <button class="btn" onclick="closeModal()">Отмена</button>
-        <button class="btn btn-primary" onclick="addContact()">Добавить</button>
-      </div>`;
-  }
-  else if(type==='new-chat'){
-    m.innerHTML=`
-      <div class="modal-title">Новый чат</div>
-      <div class="form-group"><label class="form-label">Контакт</label>
-        <select id="fch-contact">${S.contacts.map(c=>`<option value="${c.name}">${c.name}</option>`).join('')}</select>
-      </div>
-      <div class="form-group"><label class="form-label">Объявление/товар</label><input id="fch-ad" placeholder="Кухня, шкаф..."></div>
-      <div class="modal-btns">
-        <button class="btn" onclick="closeModal()">Отмена</button>
-        <button class="btn btn-primary" onclick="addChat()">Создать</button>
-      </div>`;
-  }
-  else if(type==='link-deal'){
-    m.innerHTML=`
-      <div class="modal-title">Привязать к сделке</div>
-      <div class="form-group"><label class="form-label">Сделка</label>
-        <select id="fld-deal">${S.deals.map(d=>`<option value="${d.id}">${d.name} — ${d.contact}</option>`).join('')}</select>
-      </div>
-      <div class="modal-btns">
-        <button class="btn" onclick="closeModal()">Отмена</button>
-        <button class="btn btn-primary" onclick="closeModal();toast('Чат привязан к сделке')">Привязать</button>
-      </div>`;
-  }
-  else if(type==='avito-setup'){
-    m.innerHTML=`
-      <div class="modal-title">Подключение Авито Pro API</div>
-      <div style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.7">Получить ключи можно в личном кабинете Авито → Для бизнеса → API. Требуется партнёрский аккаунт.</div>
-      <div class="form-group"><label class="form-label">Client ID</label><input placeholder="Ваш client_id"></div>
-      <div class="form-group"><label class="form-label">Client Secret</label><input type="password" placeholder="Ваш client_secret"></div>
-      <div class="form-group"><label class="form-label">User ID (аккаунт Авито)</label><input placeholder="12345678"></div>
-      <div style="background:var(--amber-bg);border:1px solid var(--amber);border-radius:8px;padding:10px;font-size:12px;color:var(--amber-text);margin-bottom:14px">
-        ⚠️ Обычный аккаунт Авито не имеет доступа к Messenger API. Нужен партнёрский статус.
-      </div>
-      <div class="modal-btns">
-        <button class="btn" onclick="closeModal()">Отмена</button>
-        <button class="btn btn-primary" onclick="toast('Настройки сохранены (демо)');closeModal()">Сохранить</button>
-      </div>`;
+  if(t==='new-deal'||t==='new-deal-c'){
+    const pc=t==='new-deal-c'?x:'',ps=t==='new-deal'&&x&&STAGES.find(s=>s.key===x)?x:'new';
+    m.innerHTML=`<div class="mt3">Новая сделка</div>
+      <div class="fg"><label class="fl">Название</label><input id="fdn" placeholder="Кухня, шкаф..."></div>
+      <div class="fg"><label class="fl">Контакт</label><select id="fdc">${S.contacts.map(c=>`<option value="${esc(c.name)}"${c.name===pc?' selected':''}>${esc(c.name)}</option>`).join('')}<option value="__new__">+ Новый</option></select></div>
+      <div class="fg"><label class="fl">Сумма (₽)</label><input id="fda" type="number" placeholder="150000"></div>
+      <div class="fg"><label class="fl">Стадия</label><select id="fds">${STAGES.map(s=>`<option value="${s.key}"${s.key===ps?' selected':''}>${s.label}</option>`).join('')}</select></div>
+      <div class="fg"><label class="fl">Источник</label><select id="fdsr"><option value="avito">Авито</option><option value="phone">Телефон</option></select></div>
+      <div class="mb"><button class="btn" onclick="closeModal()">Отмена</button><button class="btn btn-p" onclick="addDeal()">Создать</button></div>`;
+  }else if(t==='edit-deal'){
+    const d=S.deals.find(d=>d.id===x);if(!d)return;
+    m.innerHTML=`<div class="mt3">Редактировать</div>
+      <div class="fg"><label class="fl">Название</label><input id="edn" value="${esc(d.name)}"></div>
+      <div class="fg"><label class="fl">Контакт</label><input id="edc" value="${esc(d.contact)}"></div>
+      <div class="fg"><label class="fl">Сумма (₽)</label><input id="eda" type="number" value="${d.amount}"></div>
+      <div class="fg"><label class="fl">Источник</label><select id="edsr"><option value="avito"${d.source==='avito'?' selected':''}>Авито</option><option value="phone"${d.source==='phone'?' selected':''}>Телефон</option></select></div>
+      <div class="mb"><button class="btn" onclick="closeModal()">Отмена</button><button class="btn btn-p" onclick="editDeal(${d.id})">Сохранить</button></div>`;
+  }else if(t==='add-rem'){
+    const def=new Date();def.setDate(def.getDate()+1);def.setHours(10,0,0,0);
+    m.innerHTML=`<div class="mt3">Добавить будильник</div>
+      <div class="fg"><label class="fl">Напоминание</label><input id="art" placeholder="Позвонить клиенту..."></div>
+      <div class="fg"><label class="fl">Дата и время</label><input id="ardt" type="datetime-local" value="${def.toISOString().slice(0,16)}"></div>
+      <div style="font-size:12px;color:var(--amber-text);background:var(--amber-bg);border-radius:8px;padding:9px 11px;margin-bottom:4px">Будет push-уведомление + звуковой сигнал</div>
+      <div class="mb"><button class="btn" onclick="closeModal()">Отмена</button><button class="btn btn-p" onclick="addRem(${x})">Добавить</button></div>`;
+  }else if(t==='new-contact'){
+    m.innerHTML=`<div class="mt3">Новый контакт</div>
+      <div class="fg"><label class="fl">Имя</label><input id="fcn" placeholder="Иван Иванов"></div>
+      <div class="fg"><label class="fl">Телефон</label><input id="fcp" placeholder="+7 900 000-00-00"></div>
+      <div class="fg"><label class="fl">Источник</label><select id="fcs"><option value="avito">Авито</option><option value="phone">Телефон</option></select></div>
+      <div class="fg"><label class="fl">Заметка</label><textarea id="fcnt" rows="2" placeholder="Комментарий..."></textarea></div>
+      <div class="mb"><button class="btn" onclick="closeModal()">Отмена</button><button class="btn btn-p" onclick="addC()">Добавить</button></div>`;
+  }else if(t==='new-chat'){
+    m.innerHTML=`<div class="mt3">Новый чат</div>
+      <div class="fg"><label class="fl">Контакт</label><select id="fchc">${S.contacts.map(c=>`<option>${esc(c.name)}</option>`).join('')}</select></div>
+      <div class="fg"><label class="fl">Объявление</label><input id="fcha" placeholder="Кухня, шкаф..."></div>
+      <div class="mb"><button class="btn" onclick="closeModal()">Отмена</button><button class="btn btn-p" onclick="addChat()">Создать</button></div>`;
+  }else if(t==='link-deal'){
+    m.innerHTML=`<div class="mt3">Привязать к сделке</div>
+      <div class="fg"><label class="fl">Сделка</label><select>${S.deals.map(d=>`<option>${esc(d.name)} — ${esc(d.contact)}</option>`).join('')}</select></div>
+      <div class="mb"><button class="btn" onclick="closeModal()">Отмена</button><button class="btn btn-p" onclick="closeModal();toast('Привязано')">Привязать</button></div>`;
+  }else if(t==='new-mgr'){
+    m.innerHTML=`<div class="mt3">Новый менеджер</div>
+      <div class="fg"><label class="fl">Имя</label><input id="nmn" placeholder="Иван Иванов"></div>
+      <div class="fg"><label class="fl">Логин</label><input id="nml" placeholder="ivan"></div>
+      <div class="fg"><label class="fl">Пароль</label><input id="nmp" placeholder="пароль123"></div>
+      <div class="fg"><label class="fl">Роль</label><select id="nmr"><option value="manager">Менеджер</option><option value="admin">Администратор</option></select></div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:8px">Менеджер: видит сделки, чаты, контакты. Не видит настройки и кнопки удаления.</div>
+      <div class="mb"><button class="btn" onclick="closeModal()">Отмена</button><button class="btn btn-p" onclick="addMgr()">Добавить</button></div>`;
+  }else if(t==='avito'){
+    m.innerHTML=`<div class="mt3">Авито Pro API</div>
+      <div class="fg"><label class="fl">Client ID</label><input placeholder="client_id"></div>
+      <div class="fg"><label class="fl">Client Secret</label><input type="password" placeholder="client_secret"></div>
+      <div class="fg"><label class="fl">User ID</label><input placeholder="12345678"></div>
+      <div style="background:var(--amber-bg);border-radius:8px;padding:9px 11px;font-size:12px;color:var(--amber-text);margin-bottom:14px">⚠️ Требуется партнёрский аккаунт Авито</div>
+      <div class="mb"><button class="btn" onclick="closeModal()">Отмена</button><button class="btn btn-p" onclick="toast('Сохранено (демо)');closeModal()">Сохранить</button></div>`;
   }
 }
-
-function closeModal(){
-  document.getElementById('modal-overlay').classList.remove('open');
-}
+function closeModal(){document.getElementById('mo').classList.remove('open');}
 
 function addDeal(){
-  const name=document.getElementById('fd-name')?.value?.trim()||'Новая сделка';
-  let contact=document.getElementById('fd-contact')?.value;
-  if(contact==='__new__') contact='Новый клиент';
-  const amount=parseInt(document.getElementById('fd-amount')?.value)||0;
-  const stage=document.getElementById('fd-stage')?.value||'new';
-  const source=document.getElementById('fd-source')?.value||'avito';
-  S.deals.push({id:S.nextDealId++,name,contact,amount,stage,source,date:today()});
-  save(); closeModal(); render(); toast('Сделка создана');
+  const n=document.getElementById('fdn')?.value?.trim()||'Новая сделка';
+  let co=document.getElementById('fdc')?.value;if(co==='__new__')co='Новый клиент';
+  const a=parseInt(document.getElementById('fda')?.value)||0;
+  const s=document.getElementById('fds')?.value||'new';
+  const sr=document.getElementById('fdsr')?.value||'avito';
+  S.deals.push({id:S.ndi++,name:n,contact:co,amount:a,stage:s,source:sr,date:today(),note:'',reminders:[],messages:[]});
+  save();closeModal();render();toast('Сделка создана');
 }
-
-function addContact(){
-  const name=document.getElementById('fc-name')?.value?.trim()||'Новый контакт';
-  const phone=document.getElementById('fc-phone')?.value?.trim()||'—';
-  const source=document.getElementById('fc-src')?.value||'avito';
-  const note=document.getElementById('fc-note')?.value?.trim()||'';
-  S.contacts.push({id:S.nextContactId++,name,phone,source,note});
-  save(); closeModal(); render(); toast('Контакт добавлен');
+function editDeal(id){
+  const d=S.deals.find(d=>d.id===id);if(!d)return;
+  d.name=document.getElementById('edn')?.value?.trim()||d.name;
+  d.contact=document.getElementById('edc')?.value?.trim()||d.contact;
+  d.amount=parseInt(document.getElementById('eda')?.value)||d.amount;
+  d.source=document.getElementById('edsr')?.value||d.source;
+  save();closeModal();rPanel();render();toast('Обновлено');
 }
-
+function addRem(did){
+  const d=S.deals.find(d=>d.id===did);if(!d)return;
+  const t=document.getElementById('art')?.value?.trim();
+  const dt=document.getElementById('ardt')?.value;
+  if(!t||!dt){toast('Заполните всё','e');return;}
+  if(!d.reminders)d.reminders=[];
+  d.reminders.push({id:Date.now(),text:t,datetime:dt,done:false});
+  save();closeModal();rPanel();render();toast('Будильник установлен');askNotif();
+}
+function addC(){
+  const n=document.getElementById('fcn')?.value?.trim()||'Контакт';
+  const p=document.getElementById('fcp')?.value?.trim()||'—';
+  const s=document.getElementById('fcs')?.value||'avito';
+  const nt=document.getElementById('fcnt')?.value?.trim()||'';
+  S.contacts.push({id:S.nci++,name:n,phone:p,source:s,note:nt});
+  save();closeModal();render();toast('Контакт добавлен');
+}
 function addChat(){
-  const name=document.getElementById('fch-contact')?.value||'Клиент';
-  const ad=document.getElementById('fch-ad')?.value||'Объявление';
-  const initials=name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-  const colors=[['#dbeafe','#1e40af'],['#dcfce7','#166534'],['#fef3c7','#92400e'],['#ede9fe','#3730a3']];
-  const [avBg,avTc]=colors[S.chats.length%colors.length];
-  S.chats.unshift({id:Date.now(),name,av:initials,avBg,avTc,unread:0,time:nowTime(),ad,messages:[]});
-  S.activeChat=0;
-  save(); closeModal(); render(); toast('Чат создан');
+  const n=document.getElementById('fchc')?.value||'Клиент';
+  const a=document.getElementById('fcha')?.value||'Объявление';
+  const ini=n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  const cols=[['#dbeafe','#1e40af'],['#dcfce7','#166534'],['#fef3c7','#92400e'],['#ede9fe','#3730a3']];
+  const [bg,tc]=cols[S.chats.length%cols.length];
+  S.chats.unshift({id:Date.now(),name:n,av:ini,avBg:bg,avTc:tc,unread:0,time:nowt(),ad:a,messages:[]});
+  S.ac=0;save();closeModal();render();toast('Чат создан');
+}
+function addMgr(){
+  const n=document.getElementById('nmn')?.value?.trim()||'Менеджер';
+  const l=document.getElementById('nml')?.value?.trim();
+  const p=document.getElementById('nmp')?.value?.trim();
+  const r=document.getElementById('nmr')?.value||'manager';
+  if(!l||!p){toast('Заполните логин и пароль','e');return;}
+  if(S.managers.find(m=>m.login===l)){toast('Логин занят','e');return;}
+  S.managers.push({id:S.nmi++,login:l,password:p,name:n,role:r});
+  save();closeModal();render();toast('Менеджер добавлен');
 }
 
-// ═══════════════════════════════════════════════
-// PUBLIC API для вебхука Авито
-// ═══════════════════════════════════════════════
-window.receiveChatMessage = function(contactName, text, adTitle) {
-  let chat = S.chats.find(c=>c.name===contactName);
-  if(!chat){
-    const initials=contactName.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    chat={id:Date.now(),name:contactName,av:initials,avBg:'#dbeafe',avTc:'#1e40af',unread:0,time:nowTime(),ad:adTitle||'Авито',messages:[]};
-    S.chats.unshift(chat);
-  }
-  chat.messages.push({out:false,text,time:nowTime()});
-  chat.unread++;
-  chat.time=nowTime();
-  save(); render();
-  toast(`Новое сообщение от ${contactName}`);
+// SEARCH
+function handleSearch(v){if(S.page==='contacts')render();}
+
+// PUBLIC API
+window.receiveChatMessage=function(name,text,ad){
+  let c=S.chats.find(c=>c.name===name);
+  if(!c){const ini=name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();c={id:Date.now(),name,av:ini,avBg:'#dbeafe',avTc:'#1e40af',unread:0,time:nowt(),ad:ad||'Авито',messages:[]};S.chats.unshift(c);}
+  c.messages.push({out:false,text,time:nowt()});c.unread++;c.time=nowt();
+  save();render();toast('Новое сообщение от '+name);
 };
 
-// ═══════════════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════════
 applyTheme();
-render();
+if(S.user){showApp();}else{document.getElementById('ls').style.display='flex';}
 </script>
 </body>
 </html>
