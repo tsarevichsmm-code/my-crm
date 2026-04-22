@@ -371,6 +371,23 @@ const SHARED_KEYS = ['deals','contacts','chats','managers','stages'];
 const SESSION_KEYS = ['user','ac','page','theme','taskFilter','ndi','nci','nmi','nsi'];
 
 const sbReady = !!(SUPABASE_URL && SUPABASE_KEY);
+const SB_BUCKET = 'crm-files';
+
+// ── CRYPTO: SHA-256 ───────────────────────────────────────────
+async function sha256(msg){
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(msg));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function migratePasswords(){
+  let changed=false;
+  for(const m of S.managers){
+    if(m.password&&!m.passwordHash){m.passwordHash=await sha256(m.password);delete m.password;changed=true;}
+  }
+  if(changed){save();console.info('Пароли → SHA-256');}
+}
+
+// ── LOGIN RATE LIMITING ───────────────────────────────────────
+const _lt={attempts:0,lockedUntil:0};
 
 function setSyncDot(s){
   const d=document.getElementById('sync-dot');if(!d)return;
@@ -387,25 +404,69 @@ async function sbFetch(path,opts={}){
   return r;
 }
 
-// Загрузить ТОЛЬКО общие ключи из Supabase
+// Загрузить ТОЛЬКО общие ключи из Supabase (с конфликт-резолюцией по updated_at)
 async function sbPullShared(){
   if(!sbReady)return;
   setSyncDot('syncing');
   try{
-    const r=await sbFetch('?key=in.('+SHARED_KEYS.map(k=>'"'+k+'"').join(',')+')&select=key,value');
+    const r=await sbFetch('?key=in.('+SHARED_KEYS.map(k=>'"'+k+'"').join(',')+')&select=key,value,updated_at');
     const rows=await r.json();
-    rows.forEach(row=>localStorage.setItem('crm7_'+row.key,JSON.stringify(row.value)));
+    rows.forEach(row=>{
+      const localTs=localStorage.getItem('crm7__ts_'+row.key)||'0';
+      const remoteTs=row.updated_at||'0';
+      if(remoteTs>=localTs){
+        localStorage.setItem('crm7_'+row.key,JSON.stringify(row.value));
+        localStorage.setItem('crm7__ts_'+row.key,remoteTs);
+      }
+    });
     setSyncDot('ok');
   }catch(e){setSyncDot('err');console.warn('SB pull failed',e);}
 }
 
-// Сохранить один общий ключ в Supabase
+// ── SUPABASE PUSH RETRY QUEUE ────────────────────────────────
+const _pushQ=[];
+let _pushBusy=false;
+
 async function sbPushKey(key,value){
   if(!sbReady||!SHARED_KEYS.includes(key))return;
+  const i=_pushQ.findIndex(q=>q.key===key);
+  if(i>=0)_pushQ.splice(i,1);
+  _pushQ.push({key,value,ts:new Date().toISOString()});
+  processPushQueue();
+}
+
+async function processPushQueue(){
+  if(_pushBusy||_pushQ.length===0)return;
+  _pushBusy=true;setSyncDot('syncing');
+  while(_pushQ.length>0){
+    const item=_pushQ[0];
+    try{
+      await sbFetch('',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify({key:item.key,value:item.value,updated_at:item.ts})});
+      localStorage.setItem('crm7__ts_'+item.key,item.ts);
+      _pushQ.shift();setSyncDot('ok');
+    }catch(e){
+      setSyncDot('err');console.warn('Push failed, повтор через 10 сек',e);
+      setTimeout(processPushQueue,10000);
+      break;
+    }
+  }
+  _pushBusy=false;
+}
+
+// ── SUPABASE STORAGE: загрузка файлов ─────────────────────────
+async function uploadFileToStorage(file){
+  if(!sbReady)return null;
+  const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+  const path=Date.now()+'_'+safeName;
   try{
-    await sbFetch('',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify({key,value,updated_at:new Date().toISOString()})});
-    setSyncDot('ok');
-  }catch(e){setSyncDot('err');console.warn('SB push failed',key,e);}
+    const r=await fetch(SUPABASE_URL+'/storage/v1/object/'+SB_BUCKET+'/'+path,{
+      method:'POST',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':file.type||'application/octet-stream'},
+      body:file
+    });
+    if(!r.ok)throw new Error('Storage '+r.status);
+    return SUPABASE_URL+'/storage/v1/object/public/'+SB_BUCKET+'/'+path;
+  }catch(e){console.warn('Storage upload failed, fallback base64',e);return null;}
 }
 
 // ── STORAGE (localStorage для всего, Supabase только для SHARED) ──
@@ -503,14 +564,27 @@ function roleLabel(r){return r==='superadmin'?'Супер-администрат
 function roleBadge(r){return r==='superadmin'?'rsa':r==='admin'?'ra':'rm';}
 
 // ── AUTH ───────────────────────────────────────────────────
-function doLogin(){
+function showLoginErr(msg){const el=document.getElementById('lerr');el.textContent=msg;el.style.display='block';}
+async function doLogin(){
+  const now=Date.now();
+  if(now<_lt.lockedUntil){
+    const secs=Math.ceil((_lt.lockedUntil-now)/1000);
+    showLoginErr('Аккаунт заблокирован. Подождите '+secs+' сек.');return;
+  }
   const l=document.getElementById('ll').value.trim(),p=document.getElementById('lp').value;
-  // Ищем в актуальном списке менеджеров (уже загруженном из Supabase/localStorage)
-  const m=S.managers.find(m=>m.login===l&&m.password===p);
-  if(!m){document.getElementById('lerr').style.display='block';return;}
+  if(!l||!p){showLoginErr('Заполните логин и пароль');return;}
+  const hash=await sha256(p);
+  // Поддерживаем оба формата: SHA-256 (хэш) и plaintext (до миграции)
+  const m=S.managers.find(m=>m.login===l&&(m.passwordHash===hash||(!m.passwordHash&&m.password===p)));
+  if(!m){
+    _lt.attempts++;
+    if(_lt.attempts>=5){_lt.lockedUntil=Date.now()+30000;_lt.attempts=0;showLoginErr('Слишком много попыток. Заблокировано на 30 сек.');}
+    else{showLoginErr('Неверный логин или пароль (попытка '+_lt.attempts+'/5)');}
+    return;
+  }
+  _lt.attempts=0;
   document.getElementById('lerr').style.display='none';
   S.user=m;
-  // user сохраняется ТОЛЬКО в localStorage этой вкладки
   localStorage.setItem('crm7_user',JSON.stringify(m));
   showApp();
 }
@@ -531,6 +605,8 @@ async function showApp(){
     SHARED_KEYS.forEach(k=>{S[k]=LS.get(k,S[k]);});
     // user НЕ трогаем — он остаётся тем кто залогинился
   }
+  // Мигрируем plaintext пароли → SHA-256 хэши (одноразово)
+  await migratePasswords();
   render();startChecker();initPanelResize();
   if(!sbReady)document.getElementById('sb-note').style.display='block';
 }
@@ -729,7 +805,18 @@ function delDeal(id){if(!confirm('Удалить?'))return;S.deals=S.deals.filte
 function renderMsg(m){if(m.type==='file')return`<div style="align-self:${m.out?'flex-end':'flex-start'};max-width:76%">${!m.out&&m.author?`<div class="mau">${esc(m.author)}</div>`:''}<div class="mfile" onclick="dlFile('${m.dataUrl||''}','${esc(m.fileName||'file')}')"><div class="mfi">📎</div><div><div style="font-size:12px;font-weight:500">${esc(m.fileName||'Файл')}</div><div style="font-size:10px;color:var(--text3)">${m.fileSize||''}</div></div></div><div class="mt" style="${m.out?'':'text-align:left'}">${m.time||''}</div></div>`;const isTg=m.source==='telegram';return`<div class="msg ${m.out?'mo':'mi'} ${isTg?'msg-tg':''}">${!m.out&&m.author?`<div class="mau">${esc(m.author)}${isTg?' <span style="background:var(--tg-bg);color:var(--tg);border-radius:20px;padding:1px 5px;font-size:9px;font-weight:600">TG</span>':''}</div>`:''}${esc(m.text||'')}<div class="mt">${m.time||''}</div></div>`;}
 function dlFile(u,n){if(!u)return;const a=document.createElement('a');a.href=u;a.download=n;a.click();}
 function fmtSz(b){if(b<1024)return b+'B';if(b<1048576)return Math.round(b/1024)+'KB';return(b/1048576).toFixed(1)+'MB';}
-function attachFile(id,ctx){const inp=document.getElementById(ctx==='deal'?'dpfile':'chfile');if(!inp||!inp.files[0])return;const file=inp.files[0];const reader=new FileReader();reader.onload=e=>{const msg={type:'file',out:true,fileName:file.name,fileSize:fmtSz(file.size),dataUrl:e.target.result,time:nowt(),author:S.user?.name||'Менеджер'};if(ctx==='deal'){const d=S.deals.find(d=>d.id===id);if(!d)return;if(!d.messages)d.messages=[];d.messages.push(msg);save();rPanel();setTimeout(()=>{const ml=document.getElementById('dpml');if(ml)ml.scrollTop=ml.scrollHeight;},40);}else{S.chats[S.ac].messages.push(msg);S.chats[S.ac].time=nowt();save();render();setTimeout(()=>{const ml=document.getElementById('ml');if(ml)ml.scrollTop=ml.scrollHeight;},60);}toast('Файл прикреплён');};reader.readAsDataURL(file);inp.value='';}
+async function attachFile(id,ctx){const inp=document.getElementById(ctx==='deal'?'dpfile':'chfile');if(!inp||!inp.files[0])return;const file=inp.files[0];toast('Загрузка файла...','i');
+  // Пробуем Supabase Storage, иначе base64
+  const storageUrl=await uploadFileToStorage(file);
+  const buildMsg=(dataUrl)=>({type:'file',out:true,fileName:file.name,fileSize:fmtSz(file.size),dataUrl:storageUrl||dataUrl,time:nowt(),author:S.user?.name||'Менеджер'});
+  if(storageUrl){
+    const msg=buildMsg(null);
+    if(ctx==='deal'){const d=S.deals.find(d=>d.id===id);if(!d)return;if(!d.messages)d.messages=[];d.messages.push(msg);save();rPanel();setTimeout(()=>{const ml=document.getElementById('dpml');if(ml)ml.scrollTop=ml.scrollHeight;},40);}
+    else{S.chats[S.ac].messages.push(msg);S.chats[S.ac].time=nowt();save();render();setTimeout(()=>{const ml=document.getElementById('ml');if(ml)ml.scrollTop=ml.scrollHeight;},60);}
+    toast('\u0424\u0430\u0439\u043b \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043d \u0432 Storage');inp.value='';return;
+  }
+  // Fallback: base64
+  const reader=new FileReader();reader.onload=e=>{const msg=buildMsg(e.target.result);if(ctx==='deal'){const d=S.deals.find(d=>d.id===id);if(!d)return;if(!d.messages)d.messages=[];d.messages.push(msg);save();rPanel();setTimeout(()=>{const ml=document.getElementById('dpml');if(ml)ml.scrollTop=ml.scrollHeight;},40);}else{S.chats[S.ac].messages.push(msg);S.chats[S.ac].time=nowt();save();render();setTimeout(()=>{const ml=document.getElementById('ml');if(ml)ml.scrollTop=ml.scrollHeight;},60);}toast('\u0424\u0430\u0439\u043b \u043f\u0440\u0438\u043a\u0440\u0435\u043f\u043b\u0451\u043d (\u043b\u043e\u043a\u0430\u043b\u044c\u043d\u043e)');};reader.readAsDataURL(file);inp.value='';}
 
 // ── CHATS ──────────────────────────────────────────────────
 function rChats(){
@@ -864,7 +951,9 @@ function saveTgCfg(){TG={botToken:document.getElementById('tg-token')?.value?.tr
 async function testTg(){const ok=await tgSend('✅ МиниCRM — тест соединения успешен!');toast(ok?'Telegram: сообщение отправлено!':'Ошибка — проверь токен и chat_id',ok?'s':'e');}
 
 // Managers
-function saveMgr(id,field,val){if(!val.trim())return;if(field==='login'&&S.managers.find(m2=>m2.login===val&&m2.id!==id)){toast('Логин занят','e');return;}const m=S.managers.find(m=>m.id===id);if(!m)return;if(field==='role'&&val==='superadmin'&&!isSuperAdmin()){toast('Нет прав','e');return;}m[field]=val.trim();if(S.user?.id===id){S.user[field]=val.trim();localStorage.setItem('crm7_user',JSON.stringify(S.user));}save();updateSb();toast('Сохранено');}
+async function saveMgr(id,field,val){if(!val.trim())return;if(field==='login'&&S.managers.find(m2=>m2.login===val&&m2.id!==id)){toast('Логин занят','e');return;}const m=S.managers.find(m=>m.id===id);if(!m)return;if(field==='role'&&val==='superadmin'&&!isSuperAdmin()){toast('Нет прав','e');return;}
+  if(field==='password'){m.passwordHash=await sha256(val.trim());delete m.password;}else{m[field]=val.trim();}
+  if(S.user?.id===id){S.user[field]=val.trim();localStorage.setItem('crm7_user',JSON.stringify(S.user));}save();updateSb();toast('Сохранено');}
 function delMgr(id){const m=S.managers.find(m=>m.id===id);if(!m)return;if(m.role==='superadmin'&&!isSuperAdmin()){toast('Нельзя удалить Супер-администратора','e');return;}if(!confirm('Удалить?'))return;S.managers=S.managers.filter(m=>m.id!==id);save();render();toast('Удалено','e');}
 function expD(){const b=new Blob([JSON.stringify({deals:S.deals,contacts:S.contacts,chats:S.chats,managers:S.managers,stages:S.stages},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='crm-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();}
 function impD(i){const f=i.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(d.deals)S.deals=d.deals;if(d.contacts)S.contacts=d.contacts;if(d.chats)S.chats=d.chats;if(d.managers)S.managers=d.managers;if(d.stages)S.stages=d.stages;save();render();toast('Импортировано из JSON');}catch{toast('Ошибка файла','e');}};r.readAsText(f);}
@@ -893,7 +982,9 @@ function addStage(){const n=document.getElementById('stn')?.value?.trim();if(!n)
 function addC(){const n=document.getElementById('fcn')?.value?.trim()||'Контакт',p=document.getElementById('fcp')?.value?.trim()||'—',s=document.getElementById('fcs')?.value||'avito',nt=document.getElementById('fcnt')?.value?.trim()||'';S.contacts.push({id:S.nci++,name:n,phone:p,source:s,note:nt});save();closeModal();render();toast('Контакт добавлен');}
 function addChat(){const n=document.getElementById('fchc')?.value||'Клиент',did=parseInt(document.getElementById('fchd')?.value)||null,deal=did?S.deals.find(d=>d.id===did):null;const cols=[['#dbeafe','#1e40af'],['#dcfce7','#166534'],['#fef3c7','#92400e'],['#ede9fe','#3730a3']];const[bg,tc]=cols[S.chats.length%cols.length];S.chats.unshift({id:Date.now(),name:n,av:ini(n),avBg:bg,avTc:tc,unread:0,time:nowt(),dealId:did,ad:deal?.name||'Авито',messages:[]});S.ac=0;save();closeModal();render();toast('Чат создан');}
 function linkDealToChat(){const did=parseInt(document.getElementById('fld')?.value),ch=S.chats[S.ac];if(!ch||!did)return;ch.dealId=did;const d=S.deals.find(d=>d.id===did);if(d)ch.ad=d.name;save();closeModal();render();toast('Привязано');}
-function addMgr(){const n=document.getElementById('nmn')?.value?.trim()||'Менеджер',l=document.getElementById('nml')?.value?.trim(),p=document.getElementById('nmp')?.value?.trim(),r=document.getElementById('nmr')?.value||'manager';if(!l||!p){toast('Заполните логин и пароль','e');return;}if(S.managers.find(m=>m.login===l)){toast('Логин занят','e');return;}if(r==='superadmin'&&!isSuperAdmin()){toast('Нет прав','e');return;}S.managers.push({id:S.nmi++,login:l,password:p,name:n,role:r});save();closeModal();render();toast('Менеджер добавлен');}
+async function addMgr(){const n=document.getElementById('nmn')?.value?.trim()||'Менеджер',l=document.getElementById('nml')?.value?.trim(),p=document.getElementById('nmp')?.value?.trim(),r=document.getElementById('nmr')?.value||'manager';if(!l||!p){toast('Заполните логин и пароль','e');return;}if(S.managers.find(m=>m.login===l)){toast('Логин занят','e');return;}if(r==='superadmin'&&!isSuperAdmin()){toast('Нет прав','e');return;}
+  const passwordHash=await sha256(p);
+  S.managers.push({id:S.nmi++,login:l,passwordHash,name:n,role:r});save();closeModal();render();toast('Менеджер добавлен');}
 function handleSearch(v){if(S.page==='contacts')render();}
 
 // ── PUBLIC API ─────────────────────────────────────────────
