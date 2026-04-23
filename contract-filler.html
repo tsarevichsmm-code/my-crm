@@ -77,8 +77,148 @@ async function generateSpec(sharedData){
   document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(a.href);
 }
 
+
+// ── СПЕЦИФИКАЦИЯ ────────────────────────────────
+document.getElementById('spec_details').addEventListener('toggle', function(){
+  document.getElementById('spec_arrow').textContent = this.open ? '▼' : '▶';
+});
+
+// Слоты картинок
+const imgData = Array(10).fill(null);
+const slotsEl = document.getElementById('img_slots');
+for(let i=0;i<10;i++){
+  const slot = document.createElement('div');
+  slot.style.cssText='aspect-ratio:1;border:1px dashed var(--border2);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:var(--surface2);position:relative;overflow:hidden;font-size:11px;color:var(--text3);gap:4px';
+  slot.innerHTML='<span style="font-size:18px">📷</span><span>'+(i+1)+'</span>';
+  slot.onclick=()=>document.getElementById('img_inp_'+i).click();
+  const inp=document.createElement('input');
+  inp.type='file';inp.accept='image/*';inp.id='img_inp_'+i;inp.style.display='none';
+  inp.onchange=function(e){
+    const f=e.target.files[0];
+    if(!f)return;
+    const r=new FileReader();
+    r.onload=function(ev){
+      imgData[i]={data:ev.target.result,mime:f.type,name:f.name};
+      slot.innerHTML='';
+      const img=document.createElement('img');
+      img.src=ev.target.result;
+      img.style.cssText='width:100%;height:100%;object-fit:cover';
+      const rm=document.createElement('div');
+      rm.innerHTML='✕';
+      rm.style.cssText='position:absolute;top:2px;right:4px;font-size:11px;cursor:pointer;color:var(--red-text);font-weight:700';
+      rm.onclick=function(ev){ev.stopPropagation();imgData[i]=null;slot.innerHTML='<span style="font-size:18px">📷</span><span>'+(i+1)+'</span>';};
+      slot.appendChild(img);slot.appendChild(rm);
+    };
+    r.readAsDataURL(f);
+  };
+  slot.appendChild(inp);
+  slotsEl.appendChild(slot);
+}
+
+function calcSpec(){
+  const amt=parseFloat(document.getElementById('spec_amount').value)||0;
+  const pct=parseFloat(document.getElementById('spec_assembly_pct').value)||0;
+  const total=amt;
+  const asmSum=Math.round(total*pct/100*100)/100;
+  document.getElementById('spec_total').value=total?total.toLocaleString('ru-RU')+' руб.':'';
+  document.getElementById('spec_assembly_sum').value=asmSum?asmSum.toLocaleString('ru-RU')+' руб.':'';
+}
+
+async function generateSpec(sharedData){
+  const binary=atob(SPEC_B64);
+  const bytes=new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+  const zip=new PizZip(bytes.buffer);
+  const doc2=new window.docxtemplater(zip,{delimiters:{start:'{{',end:'}}'},paragraphLoop:true,nullGetter:function(){return '--';}});
+  const amt=parseFloat(document.getElementById('spec_amount').value)||0;
+  const pct=parseFloat(document.getElementById('spec_assembly_pct').value)||0;
+  doc2.render({
+    ...sharedData,
+    'единица товара': document.getElementById('spec_unit').value||'шт',
+    'Сумма спец': amt?amt.toLocaleString('ru-RU')+' руб.':'—',
+    'Процент сборки': pct?pct+'%':'—',
+    'Общая сумма спец': document.getElementById('spec_total').value||'—',
+    'Процент от общей суммы спец': document.getElementById('spec_assembly_sum').value||'—',
+  });
+  const out=doc2.getZip().generate({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(out);
+  a.download='Спецификация_'+( sharedData['ФИО_клиента'].split(' ')[0]||'клиент')+'.docx';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(a.href);
+}
+
 </script>
 <script src="https://unpkg.com/docxtemplater@3.48.0/build/docxtemplater.js">
+// ── СПЕЦИФИКАЦИЯ ────────────────────────────────
+document.getElementById('spec_details').addEventListener('toggle', function(){
+  document.getElementById('spec_arrow').textContent = this.open ? '▼' : '▶';
+});
+
+// Слоты картинок
+const imgData = Array(10).fill(null);
+const slotsEl = document.getElementById('img_slots');
+for(let i=0;i<10;i++){
+  const slot = document.createElement('div');
+  slot.style.cssText='aspect-ratio:1;border:1px dashed var(--border2);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:var(--surface2);position:relative;overflow:hidden;font-size:11px;color:var(--text3);gap:4px';
+  slot.innerHTML='<span style="font-size:18px">📷</span><span>'+(i+1)+'</span>';
+  slot.onclick=()=>document.getElementById('img_inp_'+i).click();
+  const inp=document.createElement('input');
+  inp.type='file';inp.accept='image/*';inp.id='img_inp_'+i;inp.style.display='none';
+  inp.onchange=function(e){
+    const f=e.target.files[0];
+    if(!f)return;
+    const r=new FileReader();
+    r.onload=function(ev){
+      imgData[i]={data:ev.target.result,mime:f.type,name:f.name};
+      slot.innerHTML='';
+      const img=document.createElement('img');
+      img.src=ev.target.result;
+      img.style.cssText='width:100%;height:100%;object-fit:cover';
+      const rm=document.createElement('div');
+      rm.innerHTML='✕';
+      rm.style.cssText='position:absolute;top:2px;right:4px;font-size:11px;cursor:pointer;color:var(--red-text);font-weight:700';
+      rm.onclick=function(ev){ev.stopPropagation();imgData[i]=null;slot.innerHTML='<span style="font-size:18px">📷</span><span>'+(i+1)+'</span>';};
+      slot.appendChild(img);slot.appendChild(rm);
+    };
+    r.readAsDataURL(f);
+  };
+  slot.appendChild(inp);
+  slotsEl.appendChild(slot);
+}
+
+function calcSpec(){
+  const amt=parseFloat(document.getElementById('spec_amount').value)||0;
+  const pct=parseFloat(document.getElementById('spec_assembly_pct').value)||0;
+  const total=amt;
+  const asmSum=Math.round(total*pct/100*100)/100;
+  document.getElementById('spec_total').value=total?total.toLocaleString('ru-RU')+' руб.':'';
+  document.getElementById('spec_assembly_sum').value=asmSum?asmSum.toLocaleString('ru-RU')+' руб.':'';
+}
+
+async function generateSpec(sharedData){
+  const binary=atob(SPEC_B64);
+  const bytes=new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+  const zip=new PizZip(bytes.buffer);
+  const doc2=new window.docxtemplater(zip,{delimiters:{start:'{{',end:'}}'},paragraphLoop:true,nullGetter:function(){return '--';}});
+  const amt=parseFloat(document.getElementById('spec_amount').value)||0;
+  const pct=parseFloat(document.getElementById('spec_assembly_pct').value)||0;
+  doc2.render({
+    ...sharedData,
+    'единица товара': document.getElementById('spec_unit').value||'шт',
+    'Сумма спец': amt?amt.toLocaleString('ru-RU')+' руб.':'—',
+    'Процент сборки': pct?pct+'%':'—',
+    'Общая сумма спец': document.getElementById('spec_total').value||'—',
+    'Процент от общей суммы спец': document.getElementById('spec_assembly_sum').value||'—',
+  });
+  const out=doc2.getZip().generate({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(out);
+  a.download='Спецификация_'+( sharedData['ФИО_клиента'].split(' ')[0]||'клиент')+'.docx';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(a.href);
+}
+
+
 // ── СПЕЦИФИКАЦИЯ ────────────────────────────────
 document.getElementById('spec_details').addEventListener('toggle', function(){
   document.getElementById('spec_arrow').textContent = this.open ? '▼' : '▶';
@@ -366,6 +506,39 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
       </div>
     </details>
 
+
+    <!-- СЕКЦИЯ: СПЕЦИФИКАЦИЯ -->
+    <details id="spec_details" style="margin-bottom:14px">
+      <summary style="cursor:pointer;font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;padding:8px 0;border-bottom:1px solid var(--border);list-style:none;display:flex;align-items:center;gap:6px">
+        <span id="spec_arrow">▶</span> Спецификация <span class="auto-badge" style="margin-left:4px">необязательно</span>
+      </summary>
+      <div style="margin-top:12px">
+        <div class="sec">
+          <div class="sec-label">Товар</div>
+          <div class="grid2">
+            <div class="fg"><label class="fl" for="spec_unit">Единица товара</label><input class="fi" id="spec_unit" type="text" placeholder="шт"></div>
+            <div class="fg"><label class="fl" for="spec_amount">Сумма спец (₽)</label><input class="fi" id="spec_amount" type="number" placeholder="0" min="0" oninput="calcSpec()"></div>
+          </div>
+          <div class="grid2">
+            <div class="fg"><label class="fl" for="spec_assembly_pct">Процент сборки (%)</label><input class="fi" id="spec_assembly_pct" type="number" placeholder="0" min="0" max="100" oninput="calcSpec()"></div>
+            <div class="fg"><label class="fl" for="spec_total">Общая сумма <span class="auto-badge">авто</span></label><input class="fi fi-auto" id="spec_total" type="text" readonly></div>
+          </div>
+          <div class="fg"><label class="fl" for="spec_assembly_sum">% от общей суммы <span class="auto-badge">авто</span></label><input class="fi fi-auto" id="spec_assembly_sum" type="text" readonly></div>
+        </div>
+        <div class="sec">
+          <div class="sec-label">Картинки (до 10)</div>
+          <div id="img_slots" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px"></div>
+        </div>
+        <div class="sec">
+          <div class="sec-label">Скачать спецификацию</div>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:8px 0">
+            <input type="checkbox" id="spec_download" checked style="width:16px;height:16px;accent-color:var(--blue)">
+            Скачать спецификацию вместе с договором
+          </label>
+        </div>
+      </div>
+    </details>
+
     <button class="btn btn-p btn-gen" id="btn_gen" onclick="generateContract()">
       <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v9M4 7l4 4 4-4M2 14h12"/></svg>
       Сгенерировать и скачать договор
@@ -556,6 +729,8 @@ async function generateContract(){
     toast('✅ Договор скачан: '+fname,'s');
     const sharedData={'ФИО_клиента':clientName||'—','Дата_договора':document.getElementById('contract_date').value,'Инициалы_Фамилия':document.getElementById('initials').value||'—','Паспорт':document.getElementById('passport').value||'—'};
     if(document.getElementById('spec_download').checked){await generateSpec(sharedData);toast('✅ Спецификация скачана','s');}
+    const sharedData={'ФИО_клиента':clientName||'—','Дата_договора':document.getElementById('contract_date').value,'Инициалы_Фамилия':document.getElementById('initials').value||'—','Паспорт':document.getElementById('passport').value||'—'};
+    if(document.getElementById('spec_download').checked){await generateSpec(sharedData);toast('✅ Спецификация скачана','s');}
   }catch(e){
     // Детальный вывод XTTemplateError
     if(e.properties&&e.properties.errors){
@@ -570,6 +745,76 @@ async function generateContract(){
   btn.disabled=false;
   btn.innerHTML='<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v9M4 7l4 4 4-4M2 14h12"/></svg> Сгенерировать и скачать договор';
 }
+
+// ── СПЕЦИФИКАЦИЯ ────────────────────────────────
+document.getElementById('spec_details').addEventListener('toggle', function(){
+  document.getElementById('spec_arrow').textContent = this.open ? '▼' : '▶';
+});
+
+// Слоты картинок
+const imgData = Array(10).fill(null);
+const slotsEl = document.getElementById('img_slots');
+for(let i=0;i<10;i++){
+  const slot = document.createElement('div');
+  slot.style.cssText='aspect-ratio:1;border:1px dashed var(--border2);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:var(--surface2);position:relative;overflow:hidden;font-size:11px;color:var(--text3);gap:4px';
+  slot.innerHTML='<span style="font-size:18px">📷</span><span>'+(i+1)+'</span>';
+  slot.onclick=()=>document.getElementById('img_inp_'+i).click();
+  const inp=document.createElement('input');
+  inp.type='file';inp.accept='image/*';inp.id='img_inp_'+i;inp.style.display='none';
+  inp.onchange=function(e){
+    const f=e.target.files[0];
+    if(!f)return;
+    const r=new FileReader();
+    r.onload=function(ev){
+      imgData[i]={data:ev.target.result,mime:f.type,name:f.name};
+      slot.innerHTML='';
+      const img=document.createElement('img');
+      img.src=ev.target.result;
+      img.style.cssText='width:100%;height:100%;object-fit:cover';
+      const rm=document.createElement('div');
+      rm.innerHTML='✕';
+      rm.style.cssText='position:absolute;top:2px;right:4px;font-size:11px;cursor:pointer;color:var(--red-text);font-weight:700';
+      rm.onclick=function(ev){ev.stopPropagation();imgData[i]=null;slot.innerHTML='<span style="font-size:18px">📷</span><span>'+(i+1)+'</span>';};
+      slot.appendChild(img);slot.appendChild(rm);
+    };
+    r.readAsDataURL(f);
+  };
+  slot.appendChild(inp);
+  slotsEl.appendChild(slot);
+}
+
+function calcSpec(){
+  const amt=parseFloat(document.getElementById('spec_amount').value)||0;
+  const pct=parseFloat(document.getElementById('spec_assembly_pct').value)||0;
+  const total=amt;
+  const asmSum=Math.round(total*pct/100*100)/100;
+  document.getElementById('spec_total').value=total?total.toLocaleString('ru-RU')+' руб.':'';
+  document.getElementById('spec_assembly_sum').value=asmSum?asmSum.toLocaleString('ru-RU')+' руб.':'';
+}
+
+async function generateSpec(sharedData){
+  const binary=atob(SPEC_B64);
+  const bytes=new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+  const zip=new PizZip(bytes.buffer);
+  const doc2=new window.docxtemplater(zip,{delimiters:{start:'{{',end:'}}'},paragraphLoop:true,nullGetter:function(){return '--';}});
+  const amt=parseFloat(document.getElementById('spec_amount').value)||0;
+  const pct=parseFloat(document.getElementById('spec_assembly_pct').value)||0;
+  doc2.render({
+    ...sharedData,
+    'единица товара': document.getElementById('spec_unit').value||'шт',
+    'Сумма спец': amt?amt.toLocaleString('ru-RU')+' руб.':'—',
+    'Процент сборки': pct?pct+'%':'—',
+    'Общая сумма спец': document.getElementById('spec_total').value||'—',
+    'Процент от общей суммы спец': document.getElementById('spec_assembly_sum').value||'—',
+  });
+  const out=doc2.getZip().generate({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(out);
+  a.download='Спецификация_'+( sharedData['ФИО_клиента'].split(' ')[0]||'клиент')+'.docx';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(a.href);
+}
+
 
 // ── СПЕЦИФИКАЦИЯ ────────────────────────────────
 document.getElementById('spec_details').addEventListener('toggle', function(){
