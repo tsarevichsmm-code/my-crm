@@ -339,7 +339,7 @@ async function generateContract(){
       }
     }
 
-    const doc=new window.docxtemplater(zipData,{paragraphLoop:true,linebreaks:true});
+    const doc=new window.docxtemplater(zipData,{paragraphLoop:true});
 
     const clientName=document.getElementById('client_name').value;
     const amountVal=document.getElementById('amount').value;
@@ -366,17 +366,26 @@ async function generateContract(){
       mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     });
 
-    const fname='Договор_'+(clientName.split(' ')[0]||'клиент')+'_'+
-      document.getElementById('contract_number').value.replace(/[^a-zA-Zа-яА-Я0-9]/g,'_')+'.docx';
+    const num=document.getElementById('contract_number').value||'';
+    const fname='Договор_'+(clientName.split(' ')[0]||'клиент')+(num?'_'+num.replace(/[^a-zA-Zа-яА-Я0-9]/g,'_'):'')+'.docx';
     const a=document.createElement('a');
     a.href=URL.createObjectURL(out);
     a.download=fname;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(a.href);
     toast('✅ Договор скачан: '+fname,'s');
   }catch(e){
-    console.error(e);
-    toast('Ошибка генерации: '+e.message,'e');
+    // Детальный вывод XTTemplateError
+    if(e.properties&&e.properties.errors){
+      const details=e.properties.errors.map(er=>er.properties&&er.properties.tag?'тег: '+er.properties.tag:'').join(', ');
+      console.error('XTTemplateError details:',e.properties.errors);
+      toast('Ошибка шаблона. Консоль: неизвестные теги: '+details,'e');
+    }else{
+      console.error(e);
+      toast('Ошибка: '+e.message,'e');
+    }
   }
   btn.disabled=false;
   btn.innerHTML='<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v9M4 7l4 4 4-4M2 14h12"/></svg> Сгенерировать и скачать договор';
